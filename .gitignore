@@ -5,3 +5,6 @@ db.sqlite3
 .env
 .env.*
 .vscode/
+Lib/
+Scripts/
+Include/
