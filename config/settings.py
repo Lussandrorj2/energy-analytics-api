@@ -156,9 +156,9 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
-import sys
+import os
 
-if "pytest" in sys.argv:
+if os.getenv("PYTEST_CURRENT_TEST"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
