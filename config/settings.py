@@ -151,3 +151,7 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = ["*"]
