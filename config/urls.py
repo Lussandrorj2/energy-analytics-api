@@ -9,8 +9,23 @@ from rest_framework_simplejwt.views import (
 from django.http import JsonResponse
 
 
+from django.http import JsonResponse
+from django.db import connection
+from django.db.utils import OperationalError
+
+
 def health_check(request):
-    return JsonResponse({"status": "ok"})
+    try:
+        connection.ensure_connection()
+        return JsonResponse({
+            "status": "ok",
+            "database": "connected"
+        })
+    except OperationalError:
+        return JsonResponse({
+            "status": "error",
+            "database": "disconnected"
+        }, status=500)
 
 
 router = DefaultRouter()
