@@ -1,14 +1,22 @@
 # ⚡ Energy Analytics API
 
-API backend para gerenciamento e análise de consumo energético, desenvolvida com Django e Django REST Framework.
+API REST para gestão e análise de consumo de energia.
 
-O projeto demonstra:
+O sistema permite registrar consumos mensais de clientes, calcular métricas analíticas e proteger o acesso aos dados por meio de autenticação JWT.  
+O projeto demonstra boas práticas de arquitetura backend utilizando Django e Django REST Framework.
 
-- Arquitetura modular
-- Separação de responsabilidades (Service Layer Pattern)
-- Autenticação JWT
-- Organização escalável de rotas
-- Estrutura preparada para crescimento
+---
+
+## 🎯 Objetivo
+
+Simular um sistema backend para monitoramento de consumo energético, aplicando:
+
+- Arquitetura em camadas
+- Separação de responsabilidades
+- Segurança em APIs REST
+- Organização modular e escalável
+
+A API foi estruturada para permitir futura integração com dashboards, ferramentas de BI ou aplicações frontend.
 
 ---
 
@@ -19,6 +27,8 @@ O projeto demonstra:
 - Django REST Framework
 - SimpleJWT (Autenticação JWT)
 - SQLite (ambiente de desenvolvimento)
+
+Preparado para futura migração para PostgreSQL.
 
 ---
 
@@ -37,100 +47,123 @@ energy-analytics-api/
 
 ### Organização Interna
 
-O projeto segue separação de responsabilidades:
+O projeto segue arquitetura em camadas:
 
-- models.py → Estrutura de dados
-- serializers.py → Transformação de dados
-- views.py → Camada HTTP
-- selectors.py → Consultas ao banco
-- services.py → Regras de negócio
+- `models.py` → Estrutura de dados
+- `serializers.py` → Transformação e validação de dados
+- `views.py` → Camada HTTP
+- `selectors.py` → Consultas ao banco
+- `services.py` → Regras de negócio
 
-Essa abordagem facilita manutenção e escalabilidade.
+Essa abordagem melhora:
+
+- Manutenção
+- Testabilidade
+- Escalabilidade
+- Clareza arquitetural
 
 ---
 
 ## 🔐 Autenticação
 
-A API utiliza autenticação JWT (JSON Web Token).
+A API utiliza autenticação JWT (JSON Web Token), garantindo acesso seguro e stateless.
 
 ### Obter Token
 
-POST  
-/api/token/
+**POST**  
+`/api/token/`
 
 Body:
 
+```json
 {
   "username": "seu_usuario",
   "password": "sua_senha"
 }
+```
 
 Resposta:
 
+```json
 {
   "refresh": "token_refresh",
   "access": "token_access"
 }
+```
 
 Para acessar endpoints protegidos:
 
+```
 Authorization: Bearer SEU_ACCESS_TOKEN
+```
 
 ---
 
 ## 📊 Endpoints Principais
 
-### Clientes
+### 👤 Clientes
 
-Criar cliente:
-POST /api/v1/clientes/
+Criar cliente:  
+**POST** `/api/v1/clientes/`
 
-Exemplo:
-
+```json
 {
   "nome": "João Silva",
   "documento": "12345678900"
 }
+```
 
-Listar clientes:
-GET /api/v1/clientes/
+Listar clientes:  
+**GET** `/api/v1/clientes/`
 
 ---
 
-### Consumos
+### ⚡ Consumos
 
-Criar consumo:
-POST /api/v1/consumos/
+Criar consumo:  
+**POST** `/api/v1/consumos/`
 
+```json
 {
   "cliente": 1,
   "mes": "2026-02-01",
   "consumo_kwh": 350.50
 }
+```
 
-Listar consumos:
-GET /api/v1/consumos/
+Listar consumos:  
+**GET** `/api/v1/consumos/`
 
 ---
 
-### Analytics
+### 📈 Analytics
 
 Média de consumo por cliente:
 
-GET /api/v1/analytics/media-consumo/?cliente_id=1
+**GET**  
+`/api/v1/analytics/media-consumo/?cliente_id=1`
+
+O endpoint analítico calcula:
+
+- Média histórica de consumo por cliente
+- Último consumo registrado
+- Estrutura pronta para integração com dashboards
 
 Exemplo de resposta:
 
+```json
 {
   "cliente_id": 1,
   "media": 325.25,
   "ultimo_consumo": 350.5
 }
+```
 
 ---
 
 ## ⚙️ Como Executar Localmente (Windows)
 
+```bash
 git clone <url-do-repositorio>
 cd energy-analytics-api
 
@@ -141,41 +174,47 @@ pip install -r requirements.txt
 
 python manage.py migrate
 python manage.py runserver
+```
 
 Acesse:
+
+```
 http://127.0.0.1:8000/
+```
 
 ---
 
 ## 🧠 Decisões de Arquitetura
 
-- Uso de ViewSets para CRUD
-- JWT para autenticação stateless
-- Service Layer para regras de negócio
+- Uso de ViewSets para CRUD automático
+- Autenticação JWT para segurança stateless
+- Service Layer Pattern (arquitetura em camadas)
 - Selector Layer para consultas agregadas
-- Estrutura modular por domínio
+- Estrutura modular organizada por domínio
+- Versionamento de API (`/api/v1/`)
 
-Essa organização permite evolução para:
+Essa organização permite evolução futura para:
 
 - PostgreSQL
 - Docker
-- Versionamento de API
 - Testes automatizados
-- Deploy em produção
+- Documentação automática (Swagger/OpenAPI)
+- Deploy em ambiente de produção
 
 ---
 
 ## 📈 Próximos Passos
 
-- Versionamento da API (/api/v1/)
 - Dockerização
-- PostgreSQL
-- Testes automatizados
-- Documentação automática (Swagger)
+- Migração para PostgreSQL
+- Implementação de testes automatizados
+- Monitoramento e logs estruturados
+- Implementação de detecção de anomalias de consumo
 
 ---
 
 ## 👨‍💻 Autor
-Lussandro Farias
 
-Projeto desenvolvido para prática de arquitetura backend com Django.
+**Lussandro Farias**
+
+Projeto desenvolvido para prática avançada de arquitetura backend com Django e construção de APIs analíticas seguras.
