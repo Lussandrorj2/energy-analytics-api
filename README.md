@@ -83,7 +83,7 @@ Authorization: Bearer SEU_ACCESS_TOKEN
 ### Clientes
 
 Criar cliente:
-POST /api/clientes/
+POST /api/v1/clientes/
 
 Exemplo:
 
@@ -93,14 +93,14 @@ Exemplo:
 }
 
 Listar clientes:
-GET /api/clientes/
+GET /api/v1/clientes/
 
 ---
 
 ### Consumos
 
 Criar consumo:
-POST /api/consumos/
+POST /api/v1/consumos/
 
 {
   "cliente": 1,
@@ -109,7 +109,7 @@ POST /api/consumos/
 }
 
 Listar consumos:
-GET /api/consumos/
+GET /api/v1/consumos/
 
 ---
 
@@ -117,7 +117,7 @@ GET /api/consumos/
 
 Média de consumo por cliente:
 
-GET /api/analytics/media-consumo/?cliente_id=1
+GET /api/v1/analytics/media-consumo/?cliente_id=1
 
 Exemplo de resposta:
 

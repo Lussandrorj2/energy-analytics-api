@@ -32,8 +32,14 @@ router.register(r'consumos', ConsumoViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # JWT
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/', include(router.urls)),
-    path("api/analytics/media-consumo/", MediaConsumoView.as_view()),
+
+    # Versionamento
+    path('api/v1/', include([
+        path('', include(router.urls)),
+        path('analytics/', include('apps.analytics.urls')),
+    ])),
 ]
