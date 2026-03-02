@@ -9,4 +9,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["gunicorn", "config.wsgi:application", "-c", "gunicorn.conf.py"]
+RUN python manage.py collectstatic --noinput
+CMD ["gunicorn", "config.wsgi:application", "-c", "gunicorn.conf.py", "--timeout", "120"]
