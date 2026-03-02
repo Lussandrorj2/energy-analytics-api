@@ -1,39 +1,43 @@
 # ⚡ Energy Analytics API
 
-API REST para gestão e análise de consumo de energia.
+API REST para gestão e análise de consumo de energia, com autenticação JWT, arquitetura em camadas, testes automatizados e ambiente containerizado pronto para produção.
 
-O sistema permite registrar consumos mensais de clientes, calcular métricas analíticas e proteger o acesso aos dados por meio de autenticação JWT.  
-O projeto demonstra boas práticas de arquitetura backend utilizando Django e Django REST Framework, com banco PostgreSQL e containerização via Docker.
+O sistema permite registrar consumos mensais de clientes, calcular métricas analíticas e proteger o acesso aos dados com autenticação segura baseada em token.
 
 ---
 
-## 🎯 Objetivo
+# 🎯 Objetivo
 
-Simular um sistema backend para monitoramento de consumo energético, aplicando:
+Simular um backend profissional para monitoramento de consumo energético aplicando:
 
-- Arquitetura em camadas
+- Arquitetura limpa e modular
+- Service Layer Pattern
 - Separação de responsabilidades
-- Segurança em APIs REST
-- Organização modular e escalável
-- Containerização e ambiente configurável
+- Segurança com JWT
+- Testes automatizados
+- Versionamento de API
+- Containerização com Docker
+- Configuração para produção com Gunicorn
 
-A API foi estruturada para permitir futura integração com dashboards, ferramentas de BI ou aplicações frontend.
+Projeto estruturado para futura integração com dashboards, ferramentas de BI ou frontend SPA.
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+# 🚀 Tecnologias Utilizadas
 
-- Python 3.11+
+- Python 3.11
 - Django 5+
 - Django REST Framework
-- SimpleJWT (Autenticação JWT)
+- SimpleJWT
 - PostgreSQL
+- Pytest + Pytest-Django
+- Gunicorn
 - Docker + Docker Compose
 - Variáveis de ambiente (.env)
 
 ---
 
-## 🏗 Estrutura do Projeto
+# 🏗 Estrutura do Projeto
 
 energy-analytics-api/
 │
@@ -43,34 +47,43 @@ energy-analytics-api/
 │   └── users/
 │
 ├── config/
+│   ├── templates/
+│   ├── settings.py
+│   ├── urls.py
+│   └── views.py
+│
 ├── Dockerfile
 ├── docker-compose.yml
+├── requirements.txt
 └── README.md
 
-### Organização Interna
+---
+
+# 🧠 Arquitetura Aplicada
 
 O projeto segue arquitetura em camadas:
 
 - models.py → Estrutura de dados
-- serializers.py → Transformação e validação de dados
+- serializers.py → Validação e transformação
 - views.py → Camada HTTP
 - selectors.py → Consultas ao banco
 - services.py → Regras de negócio
 
-Essa abordagem melhora:
+## Benefícios
 
-- Manutenção
-- Testabilidade
+- Melhor testabilidade
+- Código desacoplado
 - Escalabilidade
-- Clareza arquitetural
+- Clareza estrutural
+- Padrão enterprise-ready
 
 ---
 
-## 🔐 Autenticação
+# 🔐 Autenticação JWT
 
-A API utiliza autenticação JWT (JSON Web Token), garantindo acesso seguro e stateless.
+A API utiliza autenticação stateless baseada em JWT.
 
-### Obter Token
+## Obter Token
 
 POST  
 /api/token/
@@ -78,7 +91,7 @@ POST
 Body:
 
 {
-  "username": "seu_usuario",
+  "username": "admin",
   "password": "sua_senha"
 }
 
@@ -89,27 +102,27 @@ Resposta:
   "access": "token_access"
 }
 
-Para acessar endpoints protegidos:
+## Usar Token
 
 Authorization: Bearer SEU_ACCESS_TOKEN
 
 ---
 
-## 📦 Versionamento da API
+# 📦 Versionamento da API
 
-A API está versionada sob o namespace:
+A API está versionada sob:
 
 /api/v1/
 
-Isso permite evolução futura da API sem quebrar compatibilidade.
+Isso permite evolução futura sem quebrar compatibilidade.
 
 ---
 
-## 📊 Endpoints Principais
+# 📊 Endpoints Principais
 
-### 👤 Clientes
+## 👤 Clientes
 
-Criar cliente:  
+Criar cliente  
 POST /api/v1/clientes/
 
 {
@@ -117,14 +130,14 @@ POST /api/v1/clientes/
   "documento": "12345678900"
 }
 
-Listar clientes:  
+Listar clientes  
 GET /api/v1/clientes/
 
 ---
 
-### ⚡ Consumos
+## ⚡ Consumos
 
-Criar consumo:  
+Criar consumo  
 POST /api/v1/consumos/
 
 {
@@ -133,23 +146,17 @@ POST /api/v1/consumos/
   "consumo_kwh": 350.50
 }
 
-Listar consumos:  
+Listar consumos  
 GET /api/v1/consumos/
 
 ---
 
-### 📈 Analytics
+## 📈 Analytics
 
 Média de consumo por cliente:
 
 GET  
 /api/v1/analytics/media-consumo/?cliente_id=1
-
-O endpoint analítico calcula:
-
-- Média histórica de consumo por cliente
-- Último consumo registrado
-- Estrutura pronta para integração com dashboards
 
 Exemplo de resposta:
 
@@ -161,49 +168,113 @@ Exemplo de resposta:
 
 ---
 
-## 🐳 Executando com Docker (Recomendado)
+# 🖥 Interface HTML
 
-### 1️⃣ Criar arquivo .env
+O projeto também inclui páginas renderizadas via Django Templates:
 
-Na raiz do projeto, criar um arquivo chamado `.env` com:
+- /
+- /dashboard/
+- /clientes-view/
+- /analytics-view/
+- /consumo/
+
+Essas páginas simulam uma camada frontend simples integrada à API.
+
+---
+
+# 🧪 Testes Automatizados
+
+O projeto utiliza:
+
+- Pytest
+- Pytest-Django
+- Banco SQLite em memória para testes
+
+Cobertura inclui:
+
+- Autenticação JWT
+- Acesso protegido a endpoints
+- Validação de permissões
+
+Executar testes:
+
+pytest
+
+---
+
+# ❤️ Health Check
+
+Endpoint de verificação de status da aplicação:
+
+GET /health/
+
+Retorna status da aplicação e conexão com banco.
+
+---
+
+# 🐳 Executando com Docker (Produção Ready)
+
+## 1️⃣ Criar arquivo .env
 
 DB_NAME=energy_analytics  
 DB_USER=postgres  
 DB_PASSWORD=1234  
 DB_HOST=db  
 DB_PORT=5432  
+DEBUG=True  
 
-⚠️ O arquivo `.env` não deve ser versionado.
+⚠️ O arquivo .env não deve ser versionado.
 
 ---
 
-### 2️⃣ Subir os containers
+## 2️⃣ Subir os containers
 
 docker compose up --build
 
 ---
 
-### 3️⃣ Rodar as migrations
-
-Em outro terminal:
+## 3️⃣ Rodar migrations
 
 docker compose exec web python manage.py migrate
 
 ---
 
-### 4️⃣ Criar superuser
+## 4️⃣ Criar superuser
 
 docker compose exec web python manage.py createsuperuser
 
 ---
 
-### 5️⃣ Acessar aplicação
+## 5️⃣ Acessar aplicação
 
+Admin:
 http://localhost:8000/admin
+
+Aplicação:
+http://localhost:8000/
 
 ---
 
-## ⚙️ Execução Local (Sem Docker)
+# 🏭 Produção
+
+A aplicação roda com:
+
+- Gunicorn como servidor WSGI
+- Configuração via variáveis de ambiente
+- Coleta de arquivos estáticos (collectstatic)
+- PostgreSQL como banco padrão
+
+Pronta para deploy em:
+
+- Render
+- Railway
+- AWS
+- DigitalOcean
+- VPS Linux
+
+---
+
+# ⚙️ Execução Local (Sem Docker)
 
 git clone <url-do-repositorio>  
 cd energy-analytics-api  
@@ -218,40 +289,19 @@ python manage.py runserver
 
 ---
 
-## 🧠 Decisões de Arquitetura
+# 📈 Próximos Passos
 
-- Uso de ViewSets para CRUD automático
-- Autenticação JWT para segurança stateless
-- Service Layer Pattern (arquitetura em camadas)
-- Selector Layer para consultas agregadas
-- Estrutura modular organizada por domínio
-- Versionamento de API (/api/v1/)
-- PostgreSQL como banco padrão
-- Configuração via variáveis de ambiente
-- Containerização completa com Docker
-
-Essa organização permite evolução futura para:
-
-- Gunicorn (modo produção)
-- Testes automatizados
-- CI/CD
-- Deploy em ambiente de produção
+- CI/CD pipeline
+- Deploy automatizado
 - Monitoramento e logs estruturados
+- Rate limiting
+- Cache com Redis
+- Detecção de anomalias de consumo
 
 ---
 
-## 📈 Próximos Passos
-
-- Configuração com Gunicorn
-- Implementação de testes automatizados
-- Pipeline de CI/CD
-- Deploy em nuvem (Render, Railway ou AWS)
-- Implementação de detecção de anomalias de consumo
-
----
-
-## 👨‍💻 Autor
+# 👨‍💻 Autor
 
 Lussandro Farias
 
-Projeto desenvolvido para prática avançada de arquitetura backend com Django e construção de APIs analíticas seguras.
+Projeto desenvolvido para prática avançada de arquitetura backend com Django, APIs seguras e organização enterprise-ready.
