@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding: 60px;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px auto;
+            width: 300px;
+        }
+
+        input, button {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>📊 Dashboard Energy Analytics</h1>
+
+    <form id="consumoForm">
+        <input type="number" id="clienteId" placeholder="ID Cliente" required>
+        <input type="date" id="mes" required>
+        <input type="number" id="consumo" placeholder="Consumo kWh" required>
+        <button type="submit">Cadastrar Consumo</button>
+    </form>
+
+    <div class="card">
+        <h2>Status API</h2>
+        <p id="status">Carregando...</p>
+    </div>
+
+    <script>
+        const token = localStorage.getItem("access_token");
+
+        document.getElementById("consumoForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const cliente = document.getElementById("clienteId").value;
+            const mes = document.getElementById("mes").value;
+            const consumo_kwh = document.getElementById("consumo").value;
+
+            try {
+                const response = await fetch("/api/v1/consumos/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ cliente, mes, consumo_kwh })
+                });
+
+                if (response.ok) {
+                    alert("✅ Consumo cadastrado!");
+                } else {
+                    alert("❌ Erro ao cadastrar consumo");
+                }
+
+            } catch (error) {
+                alert("Erro na requisição");
+            }
+        });
+
+        fetch("/health/")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("status").innerText = data.status.toUpperCase();
+            });
+    </script>
+
+</body>
+
+</html>

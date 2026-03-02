@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            padding: 40px;
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 500px;
+            margin: 30px auto;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            background: #38bdf8;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📈 Média de Consumo</h1>
+
+<input type="number" id="clienteId" placeholder="Digite o ID do Cliente">
+<button onclick="buscarMedia()">Buscar</button>
+
+<h2 id="media"></h2>
+<h3 id="ultimo"></h3>
+
+<canvas id="grafico"></canvas>
+
+<script>
+let chart;
+
+function buscarMedia() {
+    const id = document.getElementById("clienteId").value;
+
+    fetch(`/api/v1/analytics/media-consumo/?cliente_id=${id}`)
+        .then(res => res.json())
+        .then(data => {
+
+            document.getElementById("media").innerText =
+                "Média: " + data.media + " kWh";
+
+            document.getElementById("ultimo").innerText =
+                "Último Consumo: " + data.ultimo_consumo + " kWh";
+
+            if (chart) chart.destroy();
+
+            const ctx = document.getElementById("grafico");
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Média", "Último"],
+                    datasets: [{
+                        label: "Consumo (kWh)",
+                        data: [data.media, data.ultimo_consumo],
+                    }]
+                }
+            });
+        })
+        .catch(() => {
+            alert("Erro ao buscar dados");
+        });
+}
+</script>
+
+</body>
+</html>

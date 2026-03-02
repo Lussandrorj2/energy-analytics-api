@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Clientes</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background: #38bdf8;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        .cliente-card {
+            background: #334155;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>👥 Clientes</h1>
+
+        <div class="card">
+            <h2>Cadastrar Cliente</h2>
+
+            <form id="clienteForm">
+                <input type="text" id="nome" placeholder="Nome" required>
+                <input type="text" id="documento" placeholder="Documento" required>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h3>Lista de Clientes</h3>
+            <div id="clientes-container"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const token = localStorage.getItem("access_token");
+
+        document.getElementById("clienteForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById("nome").value;
+            const documento = document.getElementById("documento").value;
+
+            const response = await fetch("/api/v1/clientes/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ nome, documento })
+            });
+
+            if (response.ok) {
+                alert("✅ Cliente cadastrado!");
+                carregarClientes();
+            } else {
+                alert("❌ Erro ao cadastrar cliente");
+            }
+        });
+
+        async function carregarClientes() {
+            const response = await fetch("/api/v1/clientes/", {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
+
+            const data = await response.json();
+            const container = document.getElementById("clientes-container");
+            container.innerHTML = "";
+
+            data.forEach(cliente => {
+                const div = document.createElement("div");
+                div.className = "cliente-card";
+                div.innerHTML = `
+                    <strong>${cliente.nome}</strong><br>
+                    Documento: ${cliente.documento}<br>
+                    ID: ${cliente.id}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        carregarClientes();
+    </script>
+
+</body>
+
+</html>
