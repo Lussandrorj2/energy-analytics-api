@@ -5,7 +5,6 @@ from .services import calcular_media_consumo
 
 
 class MediaConsumoView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         cliente_id = request.query_params.get("cliente_id")
