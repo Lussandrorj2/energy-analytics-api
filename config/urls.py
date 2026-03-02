@@ -12,7 +12,7 @@ from django.http import JsonResponse
 from django.http import JsonResponse
 from django.db import connection
 from django.db.utils import OperationalError
-
+from .views import health_check, home
 
 def health_check(request):
     try:
@@ -34,6 +34,7 @@ router.register(r'consumos', ConsumoViewSet)
 
 
 urlpatterns = [
+    path("", home),
     path('admin/', admin.site.urls),
     path("health/", health_check),
 
