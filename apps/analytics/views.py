@@ -3,8 +3,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from django.db.models import Avg, F
+from django.db.models import Avg, F, Q, Sum
 from apps.consumption.models import Consumo
+from apps.users.models import Cliente
 from .services import (
     resumo_geral,
     media_por_cliente,
@@ -12,7 +13,8 @@ from .services import (
     crescimento_percentual,
     detectar_anomalias,
     calcular_media_consumo,
-    top_consumers
+    top_consumers,
+    consumo_total_por_cliente,
 )
 
 
@@ -178,3 +180,47 @@ def top_consumers_view(request):
     data = top_consumers(int(limit))
 
     return Response(data)
+
+
+@api_view(["GET"])
+def buscar_clientes(request):
+
+    nome = request.GET.get("nome", "")
+
+    clientes = Cliente.objects.filter(
+        nome__icontains=nome
+    ).values("id", "nome", "documento")[:20]
+
+    return Response(list(clientes))
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def consumo_clientes_view(request):
+
+    data = consumo_total_por_cliente()
+
+    return Response(data)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def consumo_total_cliente_view(request):
+
+    data = (
+        Consumo.objects
+        .values("cliente__nome")
+        .annotate(total=Sum("consumo_kwh"))
+        .order_by("-total")[:10]
+    )
+
+    labels = []
+    valores = []
+
+    for item in data:
+        labels.append(item["cliente__nome"])
+        valores.append(float(item["total"] or 0))
+
+    return Response({
+        "labels": labels,
+        "valores": valores
+    })

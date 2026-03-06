@@ -1,6 +1,7 @@
 from django.db.models import Avg, Sum
 from django.db.models.functions import TruncMonth
-from apps.consumption.models import Cliente, Consumo
+from apps.consumption.models import Consumo
+from apps.users.models import Cliente
 import statistics
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -206,3 +207,16 @@ def top_consumers(limit=3):
     )
 
     return list(ranking)
+
+from django.db.models import Sum
+
+def consumo_total_por_cliente():
+
+    dados = (
+        Consumo.objects
+        .values("cliente__nome")
+        .annotate(total=Sum("consumo_kwh"))
+        .order_by("-total")
+    )
+
+    return list(dados)
