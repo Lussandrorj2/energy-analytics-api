@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Top Consumidores</title>
+
+<style>
+
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+    padding:40px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#1e293b;
+    padding:25px;
+    border-radius:14px;
+    margin-bottom:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
+}
+
+.rank{
+    font-size:22px;
+}
+
+.consumo{
+    color:#38bdf8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🏆 Top Consumidores</h1>
+
+<div id="ranking" class="container"></div>
+
+<script src="{% static 'js/top-consumidores.js' %}"></script>
+
+</body>
+</html>

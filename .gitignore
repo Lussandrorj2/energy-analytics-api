@@ -9,3 +9,7 @@ Lib/
 Scripts/
 Include/
 pyvenv.cfg
+
+# Django
+staticfiles/
+media/
