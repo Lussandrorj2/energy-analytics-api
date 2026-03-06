@@ -11,4 +11,4 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput
 
-CMD ["gunicorn", "config.wsgi:application", "-c", "gunicorn.conf.py", "--timeout", "120"]
+CMD gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --timeout 120
