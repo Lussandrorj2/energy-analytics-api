@@ -26,6 +26,21 @@
             font-weight: bold;
         }
 
+        .page-home::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background-image:url("{% static 'js/images/energy-hero.webp2.png' %}");
+
+            background-size: cover;
+            background-position: center;
+
+            filter: brightness(0.35);
+
+            z-index: -1;
+        }
+
         .page-top-consumo {
             min-height: 100vh;
             position: relative;
