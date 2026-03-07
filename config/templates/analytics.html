@@ -1,83 +1,67 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Analytics</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            background: #0f172a;
-            color: white;
-            font-family: Arial;
-            padding: 40px;
-            text-align: center;
-        }
+{% extends "base.html" %}
 
-        canvas {
-            max-width: 500px;
-            margin: 30px auto;
-        }
+{% block title %}
+Analytics
+{% endblock %}
 
-        input, button {
-            padding: 10px;
-            margin: 10px;
-            border-radius: 6px;
-            border: none;
-        }
-
-        button {
-            background: #38bdf8;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
+{% block content %}
 
 <h1>📈 Média de Consumo</h1>
 
-<input type="number" id="clienteId" placeholder="Digite o ID do Cliente">
-<button onclick="buscarMedia()">Buscar</button>
+<div class="card">
 
-<h2 id="media"></h2>
-<h3 id="ultimo"></h3>
+    <input type="number" id="clienteId" placeholder="Digite o ID do Cliente">
 
-<canvas id="grafico"></canvas>
+    <button onclick="buscarMedia()">
+        Buscar
+    </button>
+
+    <h2 id="media"></h2>
+    <h3 id="ultimo"></h3>
+
+    <canvas id="grafico"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-let chart;
 
-function buscarMedia() {
-    const id = document.getElementById("clienteId").value;
+    let chart;
 
-    fetch(`/api/v1/analytics/media-consumo/?cliente_id=${id}`)
-        .then(res => res.json())
-        .then(data => {
+    function buscarMedia() {
 
-            document.getElementById("media").innerText =
-                "Média: " + data.media + " kWh";
+        const id = document.getElementById("clienteId").value;
 
-            document.getElementById("ultimo").innerText =
-                "Último Consumo: " + data.ultimo_consumo + " kWh";
+        fetch(`/api/v1/analytics/media-consumo/?cliente_id=${id}`)
+            .then(res => res.json())
+            .then(data => {
 
-            if (chart) chart.destroy();
+                document.getElementById("media").innerText =
+                    "Média: " + data.media + " kWh";
 
-            const ctx = document.getElementById("grafico");
+                document.getElementById("ultimo").innerText =
+                    "Último Consumo: " + data.ultimo_consumo + " kWh";
 
-            chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ["Média", "Último"],
-                    datasets: [{
-                        label: "Consumo (kWh)",
-                        data: [data.media, data.ultimo_consumo],
-                    }]
-                }
-            });
-        })
-        .catch(() => {
-            alert("Erro ao buscar dados");
-        });
-}
+                if (chart) chart.destroy();
+
+                const ctx = document.getElementById("grafico");
+
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ["Média", "Último"],
+                        datasets: [{
+                            label: "Consumo (kWh)",
+                            data: [data.media, data.ultimo_consumo]
+                        }]
+                    }
+                })
+
+            })
+
+    }
+
 </script>
 
-</body>
-</html>
+{% endblock %}

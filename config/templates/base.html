@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Energy Analytics{% endblock %}</title>
+
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            margin: 0;
+        }
+
+        .header {
+            background: #020617;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: #020617;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: white;
+            background: #3b82f6;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .menu a:hover {
+            background: #2563eb;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background: #38bdf8;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        canvas {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="header">
+        ⚡ Energy Analytics
+    </div>
+
+    <div class="menu">
+
+        <a href="/">Home</a>
+        <a href="/dashboard/">Dashboard</a>
+        <a href="/clientes-view/">Clientes</a>
+        <a href="/analytics/">Analytics</a>
+        <a href="/consumo/">Consumo</a>
+        <a href="/top-consumidores/">Top Consumo</a>
+        <a href="/anomalias/">Anomalias</a>
+
+    </div>
+
+    <div class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+</body>
+
+</html>

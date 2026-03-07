@@ -1,63 +1,16 @@
+{% extends "base.html" %}
 {% load static %}
 
-<!DOCTYPE html>
-<html>
+{% block title %}
+Anomalias
+{% endblock %}
 
-<head>
-<title>Anomalias de Consumo</title>
-
-<style>
-
-body{
-    background:#0f172a;
-    color:white;
-    font-family:Arial;
-    padding:40px;
-}
-
-.container{
-    max-width:900px;
-    margin:auto;
-}
-
-.card{
-    background:#1e293b;
-    padding:20px;
-    border-radius:10px;
-    margin-bottom:10px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.4);
-}
-
-.alerta{
-    color:#f87171;
-}
-
-.cliente{
-    font-size:18px;
-    font-weight:bold;
-}
-
-.consumo{
-    color:#38bdf8;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
+{% block content %}
 
 <h1>⚠️ Anomalias de Consumo</h1>
 
-<!-- Aqui o JS vai inserir os cards -->
 <div id="anomalias"></div>
 
-</div>
-
-<!-- JS que busca os dados da API -->
 <script src="{% static 'js/anomalias.js' %}"></script>
 
-</body>
-</html>
+{% endblock %}

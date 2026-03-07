@@ -1,99 +1,50 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% load static %}
 
-<head>
-    <title>Clientes</title>
+{% block title %}
+Clientes
+{% endblock %}
 
-    {% load static %}
+{% block content %}
 
-    <style>
-        body {
-            background: #0f172a;
-            color: white;
-            font-family: Arial;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
+<h1>👥 Clientes</h1>
 
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin-top: 60px;
-            text-align: center;
-        }
+<div class="card">
 
-        .card {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-        }
+    <h2>Cadastrar Cliente</h2>
 
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: none;
-        }
+    <form id="clienteForm">
+        <input type="text" id="nome" placeholder="Nome" required>
+        <input type="text" id="documento" placeholder="Documento" required>
 
-        button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            background: #38bdf8;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        <button type="submit">
+            Cadastrar
+        </button>
 
-        button:hover {
-            background: #0ea5e9;
-        }
+    </form>
 
-        .cliente-card {
-            background: #334155;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            text-align: left;
-        }
-    </style>
-</head>
+</div>
 
-<body>
+<div class="card">
 
-    <div class="container">
+    <h3>Buscar Cliente</h3>
 
-        <h1>👥 Clientes</h1>
+    <input type="text" id="buscarCliente" placeholder="Buscar cliente pelo nome">
 
-        <div class="card">
-            <h2>Cadastrar Cliente</h2>
+    <button onclick="buscarClientes()">
+        Buscar
+    </button>
 
-            <form id="clienteForm">
-                <input type="text" id="nome" placeholder="Nome" required>
-                <input type="text" id="documento" placeholder="Documento" required>
-                <button type="submit">Cadastrar</button>
-            </form>
-        </div>
+</div>
 
-        <div class="busca-clientes">
-            <input type="text" id="buscarCliente" placeholder="Buscar cliente pelo nome">
-            <button onclick="buscarClientes()">Buscar</button>
-        </div>
+<div class="card">
 
-        <div id="lista-clientes"></div>
+    <h3>Lista de Clientes</h3>
 
-        <div class="card">
-            <h3>Lista de Clientes</h3>
-            <div id="clientes-container"></div>
-        </div>
+    <div id="clientes-container"></div>
 
-    </div>
+</div>
 
-    <script src="{% static 'js/clientes.js' %}"></script>
+<script src="{% static 'js/clientes.js' %}"></script>
 
-</body>
-
-</html>
+{% endblock %}
