@@ -2,24 +2,18 @@
 {% load static %}
 
 {% block title %}
-Home
+Top Consumidores
 {% endblock %}
 
 {% block content %}
 
-<h1>⚡ Energy Analytics</h1>
+<div class="page-top-consumo">
 
-<div class="card">
-<p>Sistema de análise de consumo energético.</p>
-</div>
+    <h1>🏆 Top Consumidores</h1>
 
-<div class="hero">
-
-<img 
-src="{% static 'js/images/energy-hero.webp2.png' %}"
-alt="Energy Analytics"
-loading="lazy"
->
+    <div class="card">
+        <div id="ranking"></div>
+    </div>
 
 </div>
 
