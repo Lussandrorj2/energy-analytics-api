@@ -7,32 +7,34 @@ Home
 
 {% block content %}
 
+<h1 class="titulo-home">⚡ Sobre o Projeto</h1>
+
 <div class="hero-home">
 
     <img src="{% static 'js/images/energy-hero.webp2.png' %}" alt="Energy Analytics">
 
-    <div class="hero-text">
+    <div class="hero-card">
 
-        <h1>Sobre o Projeto</h1>
+        <h2>⚡ Energy Analytics</h2>
 
-        <div class="card">
+        <p>
+            O Energy Analytics foi desenvolvido com o objetivo de analisar padrões de consumo
+            energético e identificar comportamentos relevantes nos dados.
+        </p>
 
-            <h2>⚡ Energy Analytics API</h2>
+        <p>O sistema permite:</p>
 
-            <p>
-                API REST para gestão e análise de consumo de energia,
-                construída com Django REST Framework, arquitetura modular
-                em camadas e ambiente containerizado com Docker.
-            </p>
+        <ul>
+            <li>Monitorar o consumo de energia</li>
+            <li>Identificar clientes com maior consumo</li>
+            <li>Detectar possíveis anomalias</li>
+            <li>Visualizar informações através de dashboards interativos</li>
+        </ul>
 
-            <ul>
-                <li>registrar consumos energéticos mensais</li>
-                <li>calcular métricas analíticas</li>
-                <li>detectar anomalias de consumo</li>
-                <li>visualizar dados em dashboards</li>
-            </ul>
-
-        </div>
+        <p>
+            Durante o desenvolvimento, desafios como organização dos dados e criação
+            de visualizações intuitivas foram enfrentados.
+        </p>
 
     </div>
 
