@@ -1,3 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
 <div class="hero-home">
 
     <div class="hero-overlay">
@@ -5,9 +14,10 @@
         <h1>⚡ Energy Analytics API</h1>
 
         <p>
-            API REST para gestão e análise de consumo de energia, construída com
-            <strong>Django REST Framework</strong>, arquitetura modular em camadas
-            e ambiente containerizado com <strong>Docker</strong>.
+            API REST para gestão e análise de consumo de energia,
+            construída com <strong>Django REST Framework</strong>,
+            arquitetura modular em camadas e ambiente containerizado
+            com <strong>Docker</strong>.
         </p>
 
         <p>O sistema permite:</p>
@@ -21,8 +31,9 @@
         </ul>
 
         <p>
-            A aplicação inclui <strong>API versionada</strong>, autenticação
-            <strong>JWT</strong>, arquitetura enterprise-ready e dashboard analítico integrado.
+            A aplicação inclui <strong>API versionada</strong>,
+            autenticação <strong>JWT</strong>,
+            arquitetura enterprise-ready e dashboard analítico integrado.
         </p>
 
         <h2>🎯 Objetivo do Projeto</h2>
@@ -57,3 +68,5 @@
     </div>
 
 </div>
+
+{% endblock %}

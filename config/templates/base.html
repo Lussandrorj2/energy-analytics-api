@@ -1,260 +1,59 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
+<div class="hero-home">
 
-<head>
+    <div class="hero-overlay">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <h1>⚡ Energy Analytics API</h1>
 
-    <title>{% block title %}Energy Analytics{% endblock %}</title>
+        <p>
+            API REST para gestão e análise de consumo de energia, construída com
+            <strong>Django REST Framework</strong>, arquitetura modular em camadas
+            e ambiente containerizado com <strong>Docker</strong>.
+        </p>
 
-    <style>
-        body {
-            background: #0f172a;
-            color: white;
-            font-family: Arial;
-            margin: 0;
-        }
+        <p>O sistema permite:</p>
 
-        .header {
-            background: #020617;
-            padding: 15px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
+        <ul>
+            <li>registrar consumos energéticos mensais de clientes</li>
+            <li>calcular métricas analíticas</li>
+            <li>detectar anomalias de consumo</li>
+            <li>visualizar dados em um dashboard interativo</li>
+            <li>analisar padrões de consumo energético</li>
+        </ul>
 
-        .titulo-home {
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 32px;
-        }
+        <p>
+            A aplicação inclui <strong>API versionada</strong>, autenticação
+            <strong>JWT</strong>, arquitetura enterprise-ready e dashboard analítico integrado.
+        </p>
 
-        .hero-home {
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto 40px auto;
+        <h2>🎯 Objetivo do Projeto</h2>
 
-            background-image: url("{% static 'js/images/energy-hero.webp22.png' %}");
-            background-size: cover;
-            background-position: center;
+        <p>
+            Este projeto simula um backend profissional de monitoramento energético,
+            aplicando boas práticas modernas de desenvolvimento backend.
+        </p>
 
-            min-height: 900px;
-            padding: 80px 20px;
+        <h3>Principais conceitos aplicados</h3>
 
-            border-radius: 12px;
-            overflow: hidden;
-        }
+        <ul>
+            <li>Arquitetura limpa e modular</li>
+            <li>Service Layer Pattern</li>
+            <li>Separação clara de responsabilidades</li>
+            <li>Segurança com autenticação JWT</li>
+            <li>Versionamento de API</li>
+            <li>Testes automatizados</li>
+            <li>Containerização com Docker</li>
+            <li>Dashboard analítico integrado</li>
+        </ul>
 
-        /* camada escura sobre a imagem */
+        <h3>Integrações futuras</h3>
 
-        .hero-home::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 0;
-        }
-
-        /* container do texto */
-
-        .hero-overlay {
-            position: relative;
-            z-index: 1;
-
-            max-width: 900px;
-            margin: auto;
-
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(6px);
-
-            padding: 40px;
-            border-radius: 12px;
-        }
-
-        /* tipografia */
-
-        .hero-overlay h1 {
-            font-size: 34px;
-            margin-bottom: 15px;
-        }
-
-        .hero-overlay h2 {
-            margin-top: 25px;
-        }
-
-        .hero-overlay h3 {
-            margin-top: 20px;
-        }
-
-        .hero-overlay p {
-            line-height: 1.6;
-        }
-
-        .hero-overlay ul {
-            margin-left: 20px;
-        }
-
-        .page-top-consumo {
-            min-height: 100vh;
-            position: relative;
-            padding: 40px;
-        }
-
-        .page-top-consumo::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-
-            background-image: url("{% static 'js/images/energy-hero.webp.png' %}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-
-            filter: brightness(0.35);
-
-            z-index: -1;
-        }
-
-        .page-anomalias {
-            min-height: 100vh;
-            position: relative;
-            padding: 40px;
-        }
-
-        .page-anomalias::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-
-            background-image: url("{% static 'js/images/energy-hero.webp3.png' %}");
-
-            background-size: cover;
-            background-position: center;
-
-            filter: brightness(0.35);
-
-            z-index: -1;
-        }
-
-        .menu {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            padding: 15px;
-            background: #020617;
-        }
-
-        .menu a {
-            text-decoration: none;
-            color: white;
-            background: #3b82f6;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 14px;
-        }
-
-        .menu a:hover {
-            background: #2563eb;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1200px;
-            margin: 40px auto;
-        }
-
-        .dashboard-container {
-            padding: 40px 20px;
-        }
-
-        .card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(6px);
-            border-radius: 12px;
-            padding: 25px;
-        }
-
-        .hero {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: none;
-            background: #38bdf8;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #0ea5e9;
-        }
-
-        canvas {
-            width: 100%;
-            max-width: 600px;
-            margin: auto;
-        }
-
-        @media (max-width:768px) {
-
-            .hero-overlay {
-                width: 95%;
-                padding: 25px;
-            }
-
-            .hero-home {
-                min-height: 700px;
-                padding: 60px 15px;
-            }
-
-        }
-    </style>
-
-</head>
-
-<body>
-
-    <div class="header">
-        ⚡ Energy Analytics
-    </div>
-
-    <div class="menu">
-
-        <a href="/">Home</a>
-        <a href="/dashboard/">Dashboard</a>
-        <a href="/clientes-view/">Clientes</a>
-        <a href="/analytics/">Analytics</a>
-        <a href="/consumo/">Consumo</a>
-        <a href="/top-consumidores/">Top Consumo</a>
-        <a href="/anomalias/">Anomalias</a>
+        <ul>
+            <li>dashboards corporativos</li>
+            <li>ferramentas de Business Intelligence</li>
+            <li>aplicações frontend SPA (React, Vue, Angular)</li>
+            <li>sistemas de monitoramento energético</li>
+        </ul>
 
     </div>
 
-    <div class="container">
-
-        {% block content %}
-        {% endblock %}
-
-    </div>
-
-</body>
-
-</html>
+</div>
