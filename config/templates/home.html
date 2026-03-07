@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
 Home
@@ -9,7 +10,17 @@ Home
 <h1>⚡ Energy Analytics</h1>
 
 <div class="card">
-    <p>Sistema de análise de consumo energético.</p>
+<p>Sistema de análise de consumo energético.</p>
+</div>
+
+<div class="hero">
+
+<img 
+src="{% static 'images/energy-hero.webp' %}"
+alt="Energy Analytics"
+loading="lazy"
+>
+
 </div>
 
 {% endblock %}
