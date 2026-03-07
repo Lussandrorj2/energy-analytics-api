@@ -1,136 +1,15 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
+{% block title %}
+Dashboard
+{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Energy Analytics</title>
+{% block content %}
 
-    <style>
-        body {
-            background: #0f172a;
-            color: white;
-            font-family: Arial;
-            text-align: center;
-            padding: 40px 20px;
-        }
-
-        h1 {
-            margin-bottom: 40px;
-        }
-
-        /* =========================
-           CARDS METRICAS
-        ========================== */
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .card {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            transition: 0.2s;
-        }
-
-        .value {
-            font-size: 26px;
-            color: #38bdf8;
-            font-weight: bold;
-        }
-
-        /* =========================
-           BOTÕES
-        ========================== */
-
-        .acoes-dashboard {
-            margin-bottom: 50px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .btn {
-            background: #38bdf8;
-            color: #0f172a;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background: #0284c7;
-        }
-
-        .btn-alerta {
-            background: #f97316;
-            color: white;
-        }
-
-        a {
-            display: block;
-            margin: 15px auto;
-            width: 90%;
-            max-width: 250px;
-            padding: 12px 20px;
-            background: #3b82f6;
-            color: white;
-            border-radius: 8px;
-        }
-
-        /* =========================
-           GRAFICOS
-        ========================== */
-
-        .graficos-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-
-        .grafico-box {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-        }
-
-        .grafico-wrapper {
-            width: 100%;
-            height: 400px;
-            margin-top: 15px;
-        }
-
-        select {
-            padding: 6px;
-            margin-bottom: 10px;
-        }
-    </style>
-
-</head>
-
-<body>
+<div class="dashboard-container">
 
     <h1>📊 Dashboard Energy Analytics</h1>
-
-    <!-- =========================
-     CARDS
-========================= -->
 
     <div class="container">
 
@@ -157,18 +36,12 @@
     </div>
 
 
-    <!-- =========================
-     BOTÕES
-========================= -->
-
     <div class="acoes-dashboard">
 
         <a href="/top-consumidores/" class="btn">
             Ver Top Consumidores
         </a>
-    </div>
 
-    <div class='acoes-dashboard'>
         <a href="/anomalias/" class="btn btn-alerta">
             🚨 Ver Anomalias
         </a>
@@ -176,42 +49,26 @@
     </div>
 
 
-    <!-- =========================
-     GRAFICOS
-========================= -->
-
     <div class="graficos-container">
 
-        <!-- GRAFICO 1 -->
-
         <div class="grafico-box">
-
             <h2>Consumo Total por Cliente</h2>
 
             <div class="grafico-wrapper">
                 <canvas id="graficoClientes"></canvas>
             </div>
-
         </div>
 
-
-        <!-- GRAFICO 2 -->
 
         <div class="grafico-box">
 
             <h2>Consumo por Cliente</h2>
 
-            <div style="margin-bottom:15px;">
-
-                <label>Período</label>
-
-                <select id="periodoSelect">
-                    <option value="3">Últimos 3 meses</option>
-                    <option value="6">Últimos 6 meses</option>
-                    <option value="12">Últimos 12 meses</option>
-                </select>
-
-            </div>
+            <select id="periodoSelect">
+                <option value="3">Últimos 3 meses</option>
+                <option value="6">Últimos 6 meses</option>
+                <option value="12">Últimos 12 meses</option>
+            </select>
 
             <select id="clienteSelect">
                 <option value="geral">Todos clientes</option>
@@ -225,10 +82,9 @@
 
     </div>
 
+</div> <!-- fecha dashboard-container -->
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static 'js/dashboard.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
 
-</body>
-
-</html>
+{% endblock %}

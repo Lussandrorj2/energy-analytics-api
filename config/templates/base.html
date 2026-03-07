@@ -6,6 +6,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
 
     <title>{% block title %}Energy Analytics{% endblock %}</title>
 
@@ -36,7 +37,7 @@
             position: absolute;
             inset: 0;
 
-            background-image: url("/static/js/images/energy-hero.webp2.png");
+            background-image: url("{% static 'js/images/energy-hero.webp2.png' %}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -46,12 +47,19 @@
             z-index: -1;
         }
 
+        .page-anomalias {
+            min-height: 100vh;
+            position: relative;
+            padding: 40px;
+        }
+
         .page-anomalias::before {
             content: "";
             position: absolute;
             inset: 0;
 
-            background-image: url("/static/js/images/energy-hero.webp3.png");
+            background-image: url("{% static 'js/images/energy-hero.webp3.png' %}");
+
             background-size: cover;
             background-position: center;
 
@@ -84,8 +92,12 @@
 
         .container {
             width: 95%;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 40px auto;
+        }
+
+        .dashboard-container {
+            padding: 40px 20px;
         }
 
         .card {

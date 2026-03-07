@@ -1,3 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Anomalias
+{% endblock %}
+
+{% block content %}
+
 <div class="page-anomalias">
 
     <h1>⚠️ Anomalias de Consumo</h1>
@@ -7,3 +16,7 @@
     </div>
 
 </div>
+
+<script src="{% static 'js/anomalias.js' %}"></script>
+
+{% endblock %}
