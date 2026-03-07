@@ -37,51 +37,65 @@
             width: 100%;
             max-width: 1200px;
             margin: 20px auto 40px auto;
-        }
 
-        .hero-home img {
-            width: 100%;
+            background-image: url("{% static 'js/images/energy-hero.webp22.png' %}");
+            background-size: cover;
+            background-position: center;
+
+            min-height: 900px;
+            padding: 80px 20px;
+
             border-radius: 12px;
-            filter: brightness(0.45);
+            overflow: hidden;
         }
 
-        .hero-card {
+        /* camada escura sobre a imagem */
+
+        .hero-home::before {
+            content: "";
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 0;
+        }
 
-            width: 65%;
-            max-width: 700px;
+        /* container do texto */
 
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(8px);
+        .hero-overlay {
+            position: relative;
+            z-index: 1;
 
-            padding: 35px 40px;
+            max-width: 900px;
+            margin: auto;
+
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
+
+            padding: 40px;
             border-radius: 12px;
         }
 
-        .hero-card h1 {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
+        /* tipografia */
 
-        .hero-card h2 {
-            font-size: 22px;
+        .hero-overlay h1 {
+            font-size: 34px;
             margin-bottom: 15px;
         }
 
-        .hero-card p {
+        .hero-overlay h2 {
+            margin-top: 25px;
+        }
+
+        .hero-overlay h3 {
+            margin-top: 20px;
+        }
+
+        .hero-overlay p {
             line-height: 1.6;
-            margin-bottom: 15px;
         }
 
-        .hero-card ul {
+        .hero-overlay ul {
             margin-left: 20px;
-        }
-
-        .hero-card li {
-            margin-bottom: 8px;
         }
 
         .page-top-consumo {
@@ -170,22 +184,6 @@
             text-align: center;
         }
 
-        .hero img {
-            width: 100%;
-            max-width: 900px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-        }
-
-        .hero-card h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
-
-        .hero-card h2 {
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
 
         input {
             width: 100%;
@@ -215,15 +213,16 @@
             margin: auto;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width:768px) {
 
-            .hero-card {
-                position: relative;
-                transform: none;
-                top: auto;
-                left: auto;
+            .hero-overlay {
                 width: 95%;
-                margin: -80px auto 0 auto;
+                padding: 25px;
+            }
+
+            .hero-home {
+                min-height: 700px;
+                padding: 60px 15px;
             }
 
         }

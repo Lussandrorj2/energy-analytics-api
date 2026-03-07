@@ -1,18 +1,59 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block title %}
-Home
-{% endblock %}
-
-{% block content %}
-
-<h1 class="titulo-home">⚡Analise de energia </h1>
-
 <div class="hero-home">
 
-    <img src="{% static 'js/images/energy-hero.webp2.png' %}" alt="Energy Analytics">
+    <div class="hero-overlay">
+
+        <h1>⚡ Energy Analytics API</h1>
+
+        <p>
+            API REST para gestão e análise de consumo de energia, construída com
+            <strong>Django REST Framework</strong>, arquitetura modular em camadas
+            e ambiente containerizado com <strong>Docker</strong>.
+        </p>
+
+        <p>O sistema permite:</p>
+
+        <ul>
+            <li>registrar consumos energéticos mensais de clientes</li>
+            <li>calcular métricas analíticas</li>
+            <li>detectar anomalias de consumo</li>
+            <li>visualizar dados em um dashboard interativo</li>
+            <li>analisar padrões de consumo energético</li>
+        </ul>
+
+        <p>
+            A aplicação inclui <strong>API versionada</strong>, autenticação
+            <strong>JWT</strong>, arquitetura enterprise-ready e dashboard analítico integrado.
+        </p>
+
+        <h2>🎯 Objetivo do Projeto</h2>
+
+        <p>
+            Este projeto simula um backend profissional de monitoramento energético,
+            aplicando boas práticas modernas de desenvolvimento backend.
+        </p>
+
+        <h3>Principais conceitos aplicados</h3>
+
+        <ul>
+            <li>Arquitetura limpa e modular</li>
+            <li>Service Layer Pattern</li>
+            <li>Separação clara de responsabilidades</li>
+            <li>Segurança com autenticação JWT</li>
+            <li>Versionamento de API</li>
+            <li>Testes automatizados</li>
+            <li>Containerização com Docker</li>
+            <li>Dashboard analítico integrado</li>
+        </ul>
+
+        <h3>Integrações futuras</h3>
+
+        <ul>
+            <li>dashboards corporativos</li>
+            <li>ferramentas de Business Intelligence</li>
+            <li>aplicações frontend SPA (React, Vue, Angular)</li>
+            <li>sistemas de monitoramento energético</li>
+        </ul>
+
+    </div>
 
 </div>
-
-{% endblock %}
