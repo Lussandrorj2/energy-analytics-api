@@ -35,10 +35,6 @@ class ConsumoViewSet(viewsets.ModelViewSet):
 # PÁGINA HTML REGISTRAR CONSUMO
 # ================================
 
-from django.shortcuts import render, redirect
-from .models import Cliente, Consumo
-
-
 def consumo_page(request):
 
     if request.method == "POST":
@@ -46,6 +42,12 @@ def consumo_page(request):
         cliente_id = request.POST.get("cliente_id")
         mes = request.POST.get("mes")
         consumo_kwh = request.POST.get("consumo_kwh")
+
+        # valida campos
+        if not cliente_id or not mes or not consumo_kwh:
+            return render(request, "consumo.html", {
+                "erro": "Preencha todos os campos"
+            })
 
         try:
             cliente = Cliente.objects.get(id=cliente_id)
@@ -56,9 +58,11 @@ def consumo_page(request):
                 consumo_kwh=consumo_kwh
             )
 
-        except Cliente.DoesNotExist:
-            print("Cliente não encontrado")
+            return redirect("/dashboard/")
 
-        return redirect("/consumo/")
+        except Cliente.DoesNotExist:
+            return render(request, "consumo.html", {
+                "erro": "Cliente não encontrado"
+            })
 
     return render(request, "consumo.html")
