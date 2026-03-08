@@ -40,7 +40,7 @@ def consumo_page(request):
     if request.method == "POST":
 
         cliente_id = request.POST.get("cliente_id")
-        mes = request.POST.get("mes")
+        mes = request.POST.get("mes") + "-1"
         consumo_kwh = request.POST.get("consumo_kwh")
 
         # valida campos
