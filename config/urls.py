@@ -25,11 +25,12 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("clientes-view/", clientes_view, name="clientes"),
     path("analytics/", analytics_page, name="analytics"),
-    path("consumo/", consumo, name="consumo"),
     path('admin/', admin.site.urls),
     path("health/", health_check, name="health"),
     path("top-consumidores/", top_consumidores_page, name="top_consumidores_page"),
     path("anomalias/", anomalias_page, name="anomalias_page"),
+
+    path('',include('apps.consumption.urls')),
 
     # JWT
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
