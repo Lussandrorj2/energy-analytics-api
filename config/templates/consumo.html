@@ -10,13 +10,21 @@ Consumo
 
 <div class="card">
 
-    <input type="number" placeholder="ID do Cliente">
-    <input type="month">
-    <input type="number" placeholder="Consumo kWh">
+<form method="POST">
 
-    <button>
-        Registrar
-    </button>
+{% csrf_token %}
+
+<input type="number" name="cliente_id" placeholder="ID do Cliente" required>
+
+<input type="month" name="mes" required>
+
+<input type="number" name="consumo_kwh" placeholder="Consumo kWh" required>
+
+<button type="submit">
+Registrar
+</button>
+
+</form>
 
 </div>
 
