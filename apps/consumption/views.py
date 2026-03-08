@@ -35,6 +35,10 @@ class ConsumoViewSet(viewsets.ModelViewSet):
 # PÁGINA HTML REGISTRAR CONSUMO
 # ================================
 
+from django.shortcuts import render, redirect
+from .models import Cliente, Consumo
+
+
 def consumo_page(request):
 
     if request.method == "POST":
@@ -44,7 +48,6 @@ def consumo_page(request):
         consumo_kwh = request.POST.get("consumo_kwh")
 
         try:
-
             cliente = Cliente.objects.get(id=cliente_id)
 
             Consumo.objects.create(
@@ -59,4 +62,3 @@ def consumo_page(request):
         return redirect("/consumo/")
 
     return render(request, "consumo.html")
-
