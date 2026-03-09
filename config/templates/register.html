@@ -11,15 +11,29 @@ Criar usuário
 <div class="card">
 
     <form method="POST">
-
         {% csrf_token %}
+
+        <!-- Show form errors if any -->
+        {% if form.errors %}
+        <div class="error-messages">
+            <ul>
+                {% for field, errors in form.errors.items %}
+                <li><strong>{{ field }}:</strong> {{ errors|join:", " }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
         {{ form.as_p }}
 
         <button type="submit">
             Criar usuário
         </button>
-
     </form>
+
+    <p style="margin-top: 20px; text-align: center;">
+        Já tem uma conta? <a href="{% url 'login' %}">Fazer login</a>
+    </p>
 
 </div>
 
