@@ -1,13 +1,10 @@
 from rest_framework import viewsets
 from django.shortcuts import render, redirect
 
-from .models import Cliente, Consumo
+from apps.users.models import Cliente
+from .models import Consumo
 from .serializers import ClienteSerializer, ConsumoSerializer
 
-
-# ================================
-# API CLIENTES
-# ================================
 
 class ClienteViewSet(viewsets.ModelViewSet):
 
@@ -16,20 +13,12 @@ class ClienteViewSet(viewsets.ModelViewSet):
     authentication_classes = []
 
 
-# ================================
-# API CONSUMO
-# ================================
-
 class ConsumoViewSet(viewsets.ModelViewSet):
 
     queryset = Consumo.objects.all()
     serializer_class = ConsumoSerializer
     authentication_classes = []
 
-
-# ================================
-# PÁGINA HTML REGISTRAR CONSUMO
-# ================================
 
 def consumo_page(request):
 
@@ -41,33 +30,14 @@ def consumo_page(request):
         mes = request.POST.get("mes") + "-01"
         consumo_kwh = request.POST.get("consumo_kwh")
 
-        if not cliente_id or not mes or not consumo_kwh:
-            return render(request, "consumo.html", {
-                "erro": "Preencha todos os campos",
-                "clientes": clientes
-            })
+        cliente = Cliente.objects.get(id=cliente_id)
 
-        try:
-            cliente = Cliente.objects.get(id=cliente_id)
+        Consumo.objects.create(
+            cliente=cliente,
+            mes=mes,
+            consumo_kwh=consumo_kwh
+        )
 
-            if Consumo.objects.filter(cliente=cliente, mes=mes).exists():
-                return render(request, "consumo.html", {
-                    "erro": "Consumo deste mês já cadastrado",
-                    "clientes": clientes
-                })
-
-            Consumo.objects.create(
-                cliente=cliente,
-                mes=mes,
-                consumo_kwh=consumo_kwh
-            )
-
-            return redirect("/dashboard/")
-
-        except Cliente.DoesNotExist:
-            return render(request, "consumo.html", {
-                "erro": "Cliente não encontrado",
-                "clientes": clientes
-            })
+        return redirect("/dashboard/")
 
     return render(request, "consumo.html", {"clientes": clientes})
