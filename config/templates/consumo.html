@@ -9,7 +9,7 @@ Consumo
 <h1>⚡ Registrar Consumo</h1>
 
 {% if erro %}
-<p style="color:red">{{erro}}</p>
+<p style="color:red">{{ erro }}</p>
 {% endif %}
 
 <div class="card">
@@ -18,11 +18,27 @@ Consumo
 
 {% csrf_token %}
 
-<input type="number" name="cliente_id" placeholder="ID do Cliente" required>
+<label>Cliente</label>
+
+<select name="cliente_id" required>
+
+<option value="">Selecionar cliente</option>
+
+{% for cliente in clientes %}
+<option value="{{ cliente.id }}">
+{{ cliente.nome }}
+</option>
+{% endfor %}
+
+</select>
+
+<label>Mês</label>
 
 <input type="month" name="mes" required>
 
-<input type="number" name="consumo_kwh" placeholder="Consumo kWh" required>
+<label>Consumo (kWh)</label>
+
+<input type="number" step="0.01" name="consumo_kwh" placeholder="Consumo kWh" required>
 
 <button type="submit">
 Registrar
