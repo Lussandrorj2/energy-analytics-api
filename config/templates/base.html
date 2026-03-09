@@ -231,7 +231,7 @@
         ⚡ Energy Analytics
     </div>
 
-   <div class="menu">
+  <div class="menu">
     <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'dashboard' %}">Dashboard</a>
     <a href="{% url 'clientes' %}">Clientes</a>
@@ -239,7 +239,13 @@
     <a href="{% url 'consumo' %}">Consumo</a>
     <a href="{% url 'top_consumidores_page' %}">Top Consumo</a>
     <a href="{% url 'anomalias_page' %}">Anomalias</a>
-    <a href="{% url 'register' %}">Criar Usuário</a>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'register' %}">Criar Usuário</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
 </div>
 
     <div class="container">
