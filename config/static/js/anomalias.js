@@ -1,13 +1,20 @@
 async function carregarAnomalias() {
 
-    const clienteId = 1;
-
-    const response = await fetch(`/api/v1/analytics/anomalias/?cliente_id=${clienteId}`);
+    const response = await fetch("/api/v1/analytics/anomalias/");
     const data = await response.json();
 
     const container = document.getElementById("anomalias");
 
+    if (!container) return;
+
     container.innerHTML = "";
+
+    if (data.length === 0) {
+
+        container.innerHTML = "<p>Nenhuma anomalia detectada.</p>";
+        return;
+
+    }
 
     data.forEach(item => {
 
@@ -15,7 +22,7 @@ async function carregarAnomalias() {
         card.className = "card";
 
         card.innerHTML = `
-            <div class="cliente">${item.cliente__nome}</div>
+            <div class="cliente">${item.cliente}</div>
             <div class="alerta">⚠ Consumo anormal</div>
             <div class="consumo">${item.consumo_kwh} kWh</div>
         `;
@@ -26,4 +33,4 @@ async function carregarAnomalias() {
 
 }
 
-carregarAnomalias();
+document.addEventListener("DOMContentLoaded", carregarAnomalias);
