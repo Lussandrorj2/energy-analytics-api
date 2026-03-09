@@ -231,16 +231,16 @@
         ⚡ Energy Analytics
     </div>
 
-    <div class="menu">
-        <a href="/">Home</a>
-        <a href="/dashboard/">Dashboard</a>
-        <a href="/clientes-view/">Clientes</a>
-        <a href="/analytics/">Analytics</a>
-        <a href="/consumo/">Consumo</a>
-        <a href="/top-consumidores/">Top Consumo</a>
-        <a href="/anomalias/">Anomalias</a>
-        <a href="/register/">Criar Usuário</a>
-    </div>
+   <div class="menu">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'clientes' %}">Clientes</a>
+    <a href="{% url 'analytics' %}">Analytics</a>
+    <a href="{% url 'consumo' %}">Consumo</a>
+    <a href="{% url 'top_consumidores_page' %}">Top Consumo</a>
+    <a href="{% url 'anomalias_page' %}">Anomalias</a>
+    <a href="{% url 'register' %}">Criar Usuário</a>
+</div>
 
     <div class="container">
         {% block content %}
