@@ -10,6 +10,8 @@ from .views import (
     consumo_clientes_view,
     consumo_total_cliente_view
 )
+from django.urls import path
+from . import views
 
 urlpatterns = [
     path("resumo-geral/", resumo_view, name="resumo-geral"),
@@ -21,4 +23,5 @@ urlpatterns = [
     path("top-consumers/", top_consumers_view, name="top-consumers"),
     path("consumo-clientes/", consumo_clientes_view),
     path("consumo-total-cliente/", consumo_total_cliente_view, name="consumo-total-cliente"),
+    path("register/", views.register, name="register"),
 ]
