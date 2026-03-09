@@ -8,14 +8,6 @@ from rest_framework import viewsets
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
-from apps.consumption.models import Cliente
-from apps.consumption.serializers import ClienteSerializer
-
-
-class ClienteViewSet(viewsets.ModelViewSet):
-    queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer
-
 
 def home(request):
     return render(request, "home.html")
