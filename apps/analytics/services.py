@@ -23,7 +23,6 @@ def resumo_geral(cliente_id=None):
         media=Avg("consumo_kwh")
     )["media"] or 0
 
-    # contar TODOS os clientes cadastrados
     total_clientes = Cliente.objects.count()
 
     return {
@@ -55,7 +54,7 @@ def media_por_cliente():
 
 
 # ================================
-# 📈 CRESCIMENTO MENSAL (GRÁFICO)
+# 📈 CRESCIMENTO MENSAL
 # ================================
 def crescimento_mensal(cliente_id=None):
 
@@ -72,16 +71,13 @@ def crescimento_mensal(cliente_id=None):
         .order_by("mes_truncado")
     )
 
-    resultado = []
-
-    for item in consumos:
-
-        resultado.append({
+    return [
+        {
             "mes": item["mes_truncado"].strftime("%m/%Y"),
             "consumo": float(item["total"] or 0)
-        })
-
-    return resultado
+        }
+        for item in consumos
+    ]
 
 
 # ================================
@@ -117,50 +113,59 @@ def crescimento_percentual(cliente_id=None):
 # ================================
 # 🚨 DETECTAR ANOMALIAS
 # ================================
-def detectar_anomalias(cliente_id):
+def detectar_anomalias(cliente_id=None):
 
-    consumos = (
-        Consumo.objects
-        .filter(cliente_id=cliente_id)
-        .order_by("mes")
-    )
+    queryset = Consumo.objects.all()
 
-    if consumos.count() < 3:
-        return []
+    if cliente_id and cliente_id != "geral":
+        queryset = queryset.filter(cliente_id=cliente_id)
 
-    valores = [float(c.consumo_kwh) for c in consumos]
+    clientes = queryset.values_list("cliente_id", flat=True).distinct()
 
-    media = statistics.mean(valores)
-    desvio = statistics.stdev(valores)
+    resultado = []
 
-    limite_superior = media + (2 * desvio)
-    limite_inferior = media - (2 * desvio)
+    for cid in clientes:
 
-    anomalias = []
+        consumos = (
+            Consumo.objects
+            .filter(cliente_id=cid)
+            .order_by("mes")
+        )
 
-    for consumo in consumos:
+        if consumos.count() < 3:
+            continue
 
-        valor = float(consumo.consumo_kwh)
+        valores = [float(c.consumo_kwh) for c in consumos]
 
-        if valor > limite_superior:
+        media = statistics.mean(valores)
+        desvio = statistics.stdev(valores)
 
-            anomalias.append({
-                "cliente": consumo.cliente.nome,
-                "mes": consumo.mes,
-                "consumo_kwh": valor,
-                "tipo": "alta"
-            })
+        limite_superior = media + (2 * desvio)
+        limite_inferior = media - (2 * desvio)
 
-        elif valor < limite_inferior:
+        for consumo in consumos:
 
-            anomalias.append({
-                "cliente": consumo.cliente.nome,
-                "mes": consumo.mes,
-                "consumo_kwh": valor,
-                "tipo": "baixa"
-            })
+            valor = float(consumo.consumo_kwh)
 
-    return anomalias
+            if valor > limite_superior:
+
+                resultado.append({
+                    "cliente": consumo.cliente.nome,
+                    "mes": consumo.mes,
+                    "consumo_kwh": valor,
+                    "tipo": "alta"
+                })
+
+            elif valor < limite_inferior:
+
+                resultado.append({
+                    "cliente": consumo.cliente.nome,
+                    "mes": consumo.mes,
+                    "consumo_kwh": valor,
+                    "tipo": "baixa"
+                })
+
+    return resultado
 
 
 # ================================
@@ -195,7 +200,7 @@ def calcular_media_consumo(cliente_id):
 # ================================
 # 🏆 TOP CONSUMIDORES
 # ================================
-def top_consumers(limit=3):
+def top_consumers(limit=5):
 
     ranking = (
         Consumo.objects
