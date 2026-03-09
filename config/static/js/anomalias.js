@@ -1,55 +1,30 @@
-async function carregarAnomalias() {
+const container = document.getElementById("anomalias");
 
-    try {
+fetch("/api/v1/analytics/anomalias/")
+    .then(res => res.json())
+    .then(data => {
 
-        const response = await fetch("/api/v1/analytics/anomalias/");
-
-        if (!response.ok) {
-            throw new Error("Erro ao carregar anomalias");
-        }
-
-        const data = await response.json();
-
-        const container = document.getElementById("anomalias");
-
-        if (!container) return;
-
-        container.innerHTML = "";
-
-        if (!data || data.length === 0) {
-
+        if (data.length === 0) {
             container.innerHTML = "<p>Nenhuma anomalia detectada.</p>";
             return;
-
         }
 
         data.forEach(item => {
 
-            const card = document.createElement("div");
-            card.className = "card";
+            const row = document.createElement("div");
 
-            card.innerHTML = `
-                <div class="cliente">${item.cliente}</div>
-                <div class="alerta">⚠ ${item.tipo}</div>
-                <div class="consumo">${Number(item.consumo_kwh).toFixed(2)} kWh</div>
-            `;
+            row.style.display = "flex";
+            row.style.justifyContent = "space-between";
+            row.style.padding = "12px 0";
+            row.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
 
-            container.appendChild(card);
+            row.innerHTML = `
+<span>${item.cliente}</span>
+<span>${item.consumo} kWh</span>
+`;
+
+            container.appendChild(row);
 
         });
 
-    } catch (error) {
-
-        console.error("Erro ao carregar anomalias:", error);
-
-        const container = document.getElementById("anomalias");
-
-        if (container) {
-            container.innerHTML = "<p>Erro ao carregar anomalias.</p>";
-        }
-
-    }
-
-}
-
-document.addEventListener("DOMContentLoaded", carregarAnomalias);
+    });
