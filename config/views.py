@@ -4,7 +4,6 @@ from django.db import connection
 from django.db.utils import OperationalError
 
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout

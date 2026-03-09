@@ -22,7 +22,7 @@ router.register(r'consumos', ConsumoViewSet)
 
 urlpatterns = [
     path("", home, name="home"),
-    path("", include("apps.users.urls")),
+    path("users/", include("apps.users.urls")),
     path("dashboard/", dashboard, name="dashboard"),
     path("clientes-view/", clientes_view, name="clientes"),
     path("analytics/", analytics_page, name="analytics"),
