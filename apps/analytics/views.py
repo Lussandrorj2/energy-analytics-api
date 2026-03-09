@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
 from rest_framework import status
 
 from django.db.models import Avg, Sum, F
@@ -23,7 +22,6 @@ from .services import (
 # 📊 RESUMO GERAL
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def resumo_view(request):
 
     cliente_id = request.GET.get("cliente")
@@ -37,7 +35,6 @@ def resumo_view(request):
 # 📊 MÉDIA POR CLIENTE
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def media_clientes_view(request):
 
     data = media_por_cliente()
@@ -49,7 +46,6 @@ def media_clientes_view(request):
 # 📈 CRESCIMENTO MENSAL
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def crescimento_view(request):
 
     cliente_id = request.GET.get("cliente_id")
@@ -91,7 +87,6 @@ def crescimento_view(request):
 # 📈 CRESCIMENTO PERCENTUAL
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def crescimento_percentual_view(request):
 
     cliente_id = request.GET.get("cliente_id")
@@ -134,7 +129,6 @@ def crescimento_percentual_view(request):
 # 🚨 DETECTAR ANOMALIAS (TODOS CLIENTES)
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def anomalias_consumo_view(request):
 
     media = Consumo.objects.aggregate(
@@ -167,8 +161,6 @@ def anomalias_consumo_view(request):
 # 📊 MÉDIA CONSUMO DETALHADA
 # ================================
 class MediaConsumoView(APIView):
-
-    permission_classes = [AllowAny]
 
     def get(self, request):
 
@@ -207,7 +199,6 @@ class MediaConsumoView(APIView):
 # 🏆 TOP CONSUMIDORES
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def top_consumers_view(request):
 
     limit = int(request.GET.get("limit", 5))
@@ -221,7 +212,6 @@ def top_consumers_view(request):
 # 🔎 BUSCAR CLIENTES
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def buscar_clientes(request):
 
     nome = request.GET.get("nome", "")
@@ -239,7 +229,6 @@ def buscar_clientes(request):
 # 📊 CONSUMO TOTAL POR CLIENTE
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def consumo_clientes_view(request):
 
     data = consumo_total_por_cliente()
@@ -251,7 +240,6 @@ def consumo_clientes_view(request):
 # 📊 CONSUMO TOTAL (GRÁFICO)
 # ================================
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def consumo_total_cliente_view(request):
 
     data = (
