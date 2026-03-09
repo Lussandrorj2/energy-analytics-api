@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from apps.consumption.views import ClienteViewSet, ConsumoViewSet
+from apps.consumption.views import ClienteViewSet, ConsumoViewSet,consumo_page
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -13,7 +13,7 @@ from django.db.utils import OperationalError
 
 # Import views from config
 from .views import (
-    home, health_check, dashboard, clientes_view, consumo, 
+    home, health_check, dashboard, clientes_view, 
     analytics_page, top_consumidores_page, anomalias_page,
     login_view, logout_view
 )
@@ -40,7 +40,7 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("clientes-view/", clientes_view, name="clientes"),
     path("analytics/", analytics_page, name="analytics"),
-    path("consumo/", consumo, name="consumo"),
+    path("consumo/", consumo_page, name="consumo"),
     path("top-consumidores/", top_consumidores_page, name="top_consumidores_page"),
     path("anomalias/", anomalias_page, name="anomalias_page"),
     
