@@ -1,6 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
-
 from django.shortcuts import render, redirect
 
 from .models import Cliente, Consumo
@@ -15,7 +13,6 @@ class ClienteViewSet(viewsets.ModelViewSet):
 
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
-    permission_classes = [AllowAny]
     authentication_classes = []
 
 
@@ -27,7 +24,6 @@ class ConsumoViewSet(viewsets.ModelViewSet):
 
     queryset = Consumo.objects.all()
     serializer_class = ConsumoSerializer
-    permission_classes = [AllowAny]
     authentication_classes = []
 
 
