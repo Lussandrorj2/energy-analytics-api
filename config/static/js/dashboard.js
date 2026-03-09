@@ -1,61 +1,185 @@
 let grafico = null;
+let graficoClientes = null;
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // 🔹 MÉTRICAS
-    fetch("/api/v1/analytics/resumo-geral/")
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao carregar resumo");
-            return res.json();
-        })
-        .then(data => {
-            const totalClientes = document.getElementById("totalClientes");
-            const totalConsumo = document.getElementById("totalConsumo");
-            const mediaGeral = document.getElementById("mediaGeral");
+    carregarClientes();
+    carregarTopConsumers();
+    carregarGraficoClientes();
 
-            if (totalClientes) totalClientes.innerText = data.total_clientes;
+    carregarResumo("geral");
+    carregarGrafico("geral");
+    carregarCrescimento("geral");
 
-            if (totalConsumo)
-                totalConsumo.innerText = Number(data.total_consumo_geral).toFixed(2) + " kWh";
+    /* ===============================
+       EVENTO SELECT CLIENTE
+    =============================== */
+    const clienteSelect = document.getElementById("clienteSelect");
 
-            if (mediaGeral)
-                mediaGeral.innerText =
-                    (data.media_geral ? Number(data.media_geral).toFixed(2) : "0.00") + " kWh";
-        })
-        .catch(err => console.error(err));
+    if (clienteSelect) {
 
-});
+        clienteSelect.addEventListener("change", function () {
 
-// 🔹 Carregar clientes no select
-carregarClientes();
+            const clienteId = this.value;
 
-// 🔹 Top consumidores
-carregarTopConsumers();
+            if (clienteId === "geral") {
+                carregarResumo("geral");
+                carregarGrafico("geral");
+                carregarCrescimento("geral");
+            } else {
+                carregarResumo(Number(clienteId));
+                carregarGrafico(Number(clienteId));
+                carregarCrescimento(Number(clienteId));
+            }
 
-// 🔹 Top consumidores
-carregarGraficoClientes();
+        });
 
-// 🔹 Evento select cliente
-const select = document.getElementById("clienteSelect");
+    }
 
-select.addEventListener("change", function () {
+    /* ===============================
+       EVENTO SELECT PERÍODO
+    =============================== */
 
-    const clienteId = this.value;
+    const periodoSelect = document.getElementById("periodoSelect");
 
-    if (clienteId === "geral") {
-        carregarResumo("geral");
-        carregarGrafico("geral");
-        carregarCrescimento("geral");
-    } else {
-        carregarResumo(Number(clienteId));
-        carregarGrafico(Number(clienteId));
-        carregarCrescimento(Number(clienteId));
+    if (periodoSelect) {
+
+        periodoSelect.addEventListener("change", function () {
+
+            const clienteId = document.getElementById("clienteSelect").value;
+
+            if (clienteId === "geral") {
+                carregarGrafico("geral");
+            } else {
+                carregarGrafico(Number(clienteId));
+            }
+
+        });
+
     }
 
 });
 
-let graficoClientes = null;
 
+/* ===============================
+   📊 MÉTRICAS
+================================ */
+async function carregarResumo(clienteId = "geral") {
+
+    const response = await fetch(`/api/v1/analytics/resumo-geral/?cliente=${clienteId}`);
+    const data = await response.json();
+
+    document.getElementById("totalClientes").innerText = data.total_clientes;
+
+    document.getElementById("totalConsumo").innerText =
+        Number(data.total_consumo_geral).toFixed(2) + " kWh";
+
+    document.getElementById("mediaGeral").innerText =
+        (data.media_geral ? data.media_geral.toFixed(2) : "0.00") + " kWh";
+
+}
+
+
+/* ===============================
+   📈 CRESCIMENTO PERCENTUAL
+================================ */
+async function carregarCrescimento(clienteId) {
+
+    try {
+
+        const response = await fetch(`/api/v1/analytics/crescimento-percentual/?cliente_id=${clienteId}`);
+
+        const elemento = document.getElementById("crescimentoPercentual");
+
+        if (!response.ok) {
+            elemento.innerText = "Sem dados";
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.crescimento_percentual !== undefined) {
+            elemento.innerText = data.crescimento_percentual + " %";
+        } else {
+            elemento.innerText = "Sem dados";
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+
+/* ===============================
+   🏆 TOP CONSUMIDORES
+================================ */
+async function carregarTopConsumers() {
+
+    try {
+
+        const response = await fetch("/api/v1/analytics/top-consumers/");
+        const data = await response.json();
+
+        const lista = document.getElementById("topConsumers");
+
+        if (!lista) return;
+
+        lista.innerHTML = "";
+
+        data.forEach(item => {
+
+            const li = document.createElement("li");
+
+            li.innerText = `${item.cliente__nome} — ${item.consumo_total} kWh`;
+
+            lista.appendChild(li);
+
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+
+/* ===============================
+   👥 CARREGAR CLIENTES
+================================ */
+async function carregarClientes() {
+
+    try {
+
+        const response = await fetch("/api/v1/clientes/");
+
+        const clientes = await response.json();
+
+        const select = document.getElementById("clienteSelect");
+
+        if (!select) return;
+
+        clientes.forEach(cliente => {
+
+            const option = document.createElement("option");
+
+            option.value = cliente.id;
+            option.textContent = cliente.nome;
+
+            select.appendChild(option);
+
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+
+/* ===============================
+   📊 GRÁFICO TOTAL POR CLIENTE
+================================ */
 async function carregarGraficoClientes() {
 
     const response = await fetch("/api/v1/analytics/consumo-clientes/");
@@ -64,9 +188,7 @@ async function carregarGraficoClientes() {
     const labels = data.map(item => item.cliente__nome);
     const valores = data.map(item => item.total);
 
-    const ctx = document
-        .getElementById("graficoClientes")
-        .getContext("2d");
+    const ctx = document.getElementById("graficoClientes").getContext("2d");
 
     if (graficoClientes) graficoClientes.destroy();
 
@@ -91,129 +213,25 @@ async function carregarGraficoClientes() {
 
 }
 
-async function carregarResumo(clienteId = "geral") {
-
-    const response = await fetch(`/api/v1/analytics/resumo-geral/?cliente=${clienteId}`);
-    const data = await response.json();
-
-    document.getElementById("totalClientes").innerText = data.total_clientes;
-    document.getElementById("totalConsumo").innerText = data.total_consumo_geral.toFixed(2) + " kWh";
-    document.getElementById("mediaGeral").innerText =
-        (data.media_geral ? data.media_geral.toFixed(2) : "0.00") + " kWh";
-
-}
 
 /* ===============================
-   📈 CRESCIMENTO PERCENTUAL
-================================ */
-async function carregarCrescimento(clienteId) {
-
-    try {
-        const response = await fetch(`/api/v1/analytics/crescimento-percentual/?cliente_id=${clienteId}`);
-
-        const elemento = document.getElementById("crescimentoPercentual");
-
-        if (!response.ok) {
-            if (elemento) elemento.innerText = "Sem dados";
-            return;
-        }
-
-        const data = await response.json();
-
-        if (elemento && data.crescimento_percentual !== undefined) {
-            elemento.innerText = data.crescimento_percentual + " %";
-        } else if (elemento) {
-            elemento.innerText = "Sem dados";
-        }
-
-    } catch (error) {
-        console.error("Erro ao carregar crescimento:", error);
-        const elemento = document.getElementById("crescimentoPercentual");
-        if (elemento) elemento.innerText = "Erro";
-    }
-
-}
-
-
-
-/* ===============================
-   🏆 TOP CONSUMIDORES
-================================ */
-async function carregarTopConsumers() {
-
-    try {
-        const response = await fetch("/api/v1/analytics/top-consumers/");
-        const data = await response.json();
-
-        const lista = document.getElementById("topConsumers");
-
-        if (!lista) return;
-
-        lista.innerHTML = "";
-
-        data.forEach(item => {
-
-            const li = document.createElement("li");
-
-            li.innerText = `${item.cliente__nome} — ${item.consumo_total} kWh`;
-
-            lista.appendChild(li);
-
-        });
-
-    } catch (error) {
-        console.error("Erro ao carregar top consumidores:", error);
-    }
-
-}
-
-
-
-/* ===============================
-   👥 CARREGAR CLIENTES
-================================ */
-async function carregarClientes() {
-
-    try {
-        const response = await fetch("/api/v1/clientes/");
-
-        if (!response.ok) throw new Error("Erro ao carregar clientes");
-
-        const clientes = await response.json();
-
-        const select = document.getElementById("clienteSelect");
-
-        if (!select) return;
-
-        clientes.forEach(cliente => {
-
-            const option = document.createElement("option");
-
-            option.value = cliente.id;
-            option.textContent = cliente.nome;
-
-            select.appendChild(option);
-
-        });
-
-    } catch (error) {
-        console.error("Erro ao carregar clientes:", error);
-    }
-
-}
-
-
-
-/* ===============================
-   📊 GRÁFICO DE CONSUMO
+   📈 GRÁFICO CONSUMO
 ================================ */
 async function carregarGrafico(clienteId) {
 
     try {
 
-        const response = await fetch(`/api/v1/analytics/crescimento/?cliente_id=${clienteId}&periodo=${periodo}`);
+        const periodoSelect = document.getElementById("periodoSelect");
 
-        if (!response.ok) throw new Error("Erro ao carregar gráfico");
+        let periodo = periodoSelect ? periodoSelect.value : "todos";
+
+        if (periodo === "todos") {
+            periodo = "";
+        }
+
+        const response = await fetch(
+            `/api/v1/analytics/crescimento/?cliente_id=${clienteId}&periodo=${periodo}`
+        );
 
         const data = await response.json();
 
@@ -229,7 +247,9 @@ async function carregarGrafico(clienteId) {
         if (grafico) grafico.destroy();
 
         grafico = new Chart(ctx, {
+
             type: "line",
+
             data: {
                 labels: labels,
                 datasets: [{
@@ -241,14 +261,16 @@ async function carregarGrafico(clienteId) {
                     fill: true
                 }]
             },
+
             options: {
                 responsive: true,
                 maintainAspectRatio: false
             }
+
         });
 
     } catch (error) {
-        console.error("Erro ao carregar gráfico:", error);
+        console.error(error);
     }
 
 }
