@@ -23,7 +23,7 @@ async function carregarAnomalias() {
 
         card.innerHTML = `
             <div class="cliente">${item.cliente}</div>
-            <div class="alerta">⚠ Consumo anormal</div>
+            <div class="alerta">⚠ ${item.tipo}</div>
             <div class="consumo">${item.consumo_kwh} kWh</div>
         `;
 
