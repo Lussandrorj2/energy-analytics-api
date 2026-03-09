@@ -211,7 +211,7 @@ async function carregarGrafico(clienteId) {
 
     try {
 
-        const response = await fetch(`/api/v1/analytics/crescimento/?cliente_id=${clienteId}`);
+        const response = await fetch(`/api/v1/analytics/crescimento/?cliente_id=${clienteId}&periodo=${periodo}`);
 
         if (!response.ok) throw new Error("Erro ao carregar gráfico");
 
