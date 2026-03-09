@@ -3,15 +3,16 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework import status
-from django.db.models import Avg, F, Q, Sum
+
+from django.db.models import Avg, Sum, F
 from apps.consumption.models import Consumo
 from apps.users.models import Cliente
+
 from .services import (
     resumo_geral,
     media_por_cliente,
     crescimento_mensal,
     crescimento_percentual,
-    detectar_anomalias,
     calcular_media_consumo,
     top_consumers,
     consumo_total_por_cliente,
@@ -24,8 +25,12 @@ from .services import (
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def resumo_view(request):
+
     cliente_id = request.GET.get("cliente")
-    return Response(resumo_geral(cliente_id))
+
+    data = resumo_geral(cliente_id)
+
+    return Response(data)
 
 
 # ================================
@@ -34,15 +39,19 @@ def resumo_view(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def media_clientes_view(request):
-    return Response(media_por_cliente())
+
+    data = media_por_cliente()
+
+    return Response(data)
 
 
 # ================================
-# 📈 CRESCIMENTO MENSAL (GRÁFICO)
+# 📈 CRESCIMENTO MENSAL
 # ================================
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def crescimento_view(request):
+
     cliente_id = request.GET.get("cliente_id")
 
     if not cliente_id:
@@ -53,10 +62,14 @@ def crescimento_view(request):
 
     if cliente_id == "geral":
         data = crescimento_mensal(None)
+
     else:
+
         try:
             cliente_id = int(cliente_id)
+
         except ValueError:
+
             return Response(
                 {"error": "cliente_id inválido"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -65,6 +78,7 @@ def crescimento_view(request):
         data = crescimento_mensal(cliente_id)
 
     if not data:
+
         return Response(
             {"error": "Dados insuficientes"},
             status=status.HTTP_404_NOT_FOUND
@@ -79,6 +93,7 @@ def crescimento_view(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def crescimento_percentual_view(request):
+
     cliente_id = request.GET.get("cliente_id")
 
     if not cliente_id:
@@ -88,11 +103,16 @@ def crescimento_percentual_view(request):
         )
 
     if cliente_id == "geral":
+
         data = crescimento_percentual(None)
+
     else:
+
         try:
             cliente_id = int(cliente_id)
+
         except ValueError:
+
             return Response(
                 {"error": "cliente_id inválido"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -101,6 +121,7 @@ def crescimento_percentual_view(request):
         data = crescimento_percentual(cliente_id)
 
     if not data:
+
         return Response(
             {"error": "Dados insuficientes"},
             status=status.HTTP_404_NOT_FOUND
@@ -110,9 +131,8 @@ def crescimento_percentual_view(request):
 
 
 # ================================
-# 🚨 DETECTAR ANOMALIAS
+# 🚨 DETECTAR ANOMALIAS (TODOS CLIENTES)
 # ================================
-
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def anomalias_consumo_view(request):
@@ -127,22 +147,35 @@ def anomalias_consumo_view(request):
     anomalias = (
         Consumo.objects
         .filter(consumo_kwh__gt=media * 2)
-        .values("cliente__nome","consumo_kwh")
+        .values("cliente__nome", "consumo_kwh")
     )
 
-    return Response(list(anomalias))
+    resultado = []
+
+    for item in anomalias:
+
+        resultado.append({
+            "cliente": item["cliente__nome"],
+            "consumo_kwh": float(item["consumo_kwh"]),
+            "tipo": "Consumo anormal"
+        })
+
+    return Response(resultado)
 
 
 # ================================
 # 📊 MÉDIA CONSUMO DETALHADA
 # ================================
-
 class MediaConsumoView(APIView):
 
+    permission_classes = [AllowAny]
+
     def get(self, request):
+
         cliente_id = request.query_params.get("cliente_id")
 
         if not cliente_id:
+
             return Response(
                 {"error": "cliente_id é obrigatório"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -150,7 +183,9 @@ class MediaConsumoView(APIView):
 
         try:
             cliente_id = int(cliente_id)
+
         except ValueError:
+
             return Response(
                 {"error": "cliente_id deve ser inteiro"},
                 status=status.HTTP_400_BAD_REQUEST
@@ -159,19 +194,20 @@ class MediaConsumoView(APIView):
         data = calcular_media_consumo(cliente_id)
 
         if data is None:
+
             return Response(
                 {"error": "Cliente não possui consumos"},
                 status=status.HTTP_404_NOT_FOUND
             )
 
         return Response(data)
-    
-    
-#===========================
-# 🏆 TOP CONSUMIDORES
-#===========================
 
+
+# ================================
+# 🏆 TOP CONSUMIDORES
+# ================================
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def top_consumers_view(request):
 
     limit = int(request.GET.get("limit", 5))
@@ -181,17 +217,27 @@ def top_consumers_view(request):
     return Response(data)
 
 
+# ================================
+# 🔎 BUSCAR CLIENTES
+# ================================
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def buscar_clientes(request):
 
     nome = request.GET.get("nome", "")
 
-    clientes = Cliente.objects.filter(
-        nome__icontains=nome
-    ).values("id", "nome", "documento")[:20]
+    clientes = (
+        Cliente.objects
+        .filter(nome__icontains=nome)
+        .values("id", "nome", "documento")[:20]
+    )
 
     return Response(list(clientes))
 
+
+# ================================
+# 📊 CONSUMO TOTAL POR CLIENTE
+# ================================
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def consumo_clientes_view(request):
@@ -201,6 +247,9 @@ def consumo_clientes_view(request):
     return Response(data)
 
 
+# ================================
+# 📊 CONSUMO TOTAL (GRÁFICO)
+# ================================
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def consumo_total_cliente_view(request):
@@ -216,6 +265,7 @@ def consumo_total_cliente_view(request):
     valores = []
 
     for item in data:
+
         labels.append(item["cliente__nome"])
         valores.append(float(item["total"] or 0))
 
