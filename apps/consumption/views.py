@@ -37,20 +37,28 @@ class ConsumoViewSet(viewsets.ModelViewSet):
 
 def consumo_page(request):
 
+    clientes = Cliente.objects.all()
+
     if request.method == "POST":
 
         cliente_id = request.POST.get("cliente_id")
-        mes = request.POST.get("mes") + "-1"
+        mes = request.POST.get("mes") + "-01"
         consumo_kwh = request.POST.get("consumo_kwh")
 
-        # valida campos
         if not cliente_id or not mes or not consumo_kwh:
             return render(request, "consumo.html", {
-                "erro": "Preencha todos os campos"
+                "erro": "Preencha todos os campos",
+                "clientes": clientes
             })
 
         try:
             cliente = Cliente.objects.get(id=cliente_id)
+
+            if Consumo.objects.filter(cliente=cliente, mes=mes).exists():
+                return render(request, "consumo.html", {
+                    "erro": "Consumo deste mês já cadastrado",
+                    "clientes": clientes
+                })
 
             Consumo.objects.create(
                 cliente=cliente,
@@ -62,7 +70,8 @@ def consumo_page(request):
 
         except Cliente.DoesNotExist:
             return render(request, "consumo.html", {
-                "erro": "Cliente não encontrado"
+                "erro": "Cliente não encontrado",
+                "clientes": clientes
             })
 
-    return render(request, "consumo.html")
+    return render(request, "consumo.html", {"clientes": clientes})
