@@ -3,8 +3,6 @@ from django.db.models.functions import TruncMonth
 from apps.consumption.models import Consumo
 from apps.users.models import Cliente
 import statistics
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 
 
 # ================================
@@ -19,17 +17,18 @@ def resumo_geral(cliente_id=None):
 
     total_consumo = consumos.aggregate(
         total=Sum("consumo_kwh")
-    )["total"]
+    )["total"] or 0
 
     media = consumos.aggregate(
         media=Avg("consumo_kwh")
-    )["media"]
+    )["media"] or 0
 
-    total_clientes = consumos.values("cliente").distinct().count()
+    # contar TODOS os clientes cadastrados
+    total_clientes = Cliente.objects.count()
 
     return {
-        "total_consumo_geral": total_consumo or 0,
-        "media_geral": media or 0,
+        "total_consumo_geral": float(total_consumo),
+        "media_geral": float(media),
         "total_clientes": total_clientes
     }
 
@@ -38,9 +37,10 @@ def resumo_geral(cliente_id=None):
 # 📊 MÉDIA POR CLIENTE
 # ================================
 def media_por_cliente():
+
     clientes = (
         Cliente.objects
-        .annotate(media=Avg("consumo__consumo_kwh"))
+        .annotate(media=Avg("consumos__consumo_kwh"))
         .values("id", "nome", "media")
     )
 
@@ -58,9 +58,10 @@ def media_por_cliente():
 # 📈 CRESCIMENTO MENSAL (GRÁFICO)
 # ================================
 def crescimento_mensal(cliente_id=None):
+
     queryset = Consumo.objects.all()
 
-    if cliente_id:
+    if cliente_id and cliente_id != "geral":
         queryset = queryset.filter(cliente_id=cliente_id)
 
     consumos = (
@@ -74,6 +75,7 @@ def crescimento_mensal(cliente_id=None):
     resultado = []
 
     for item in consumos:
+
         resultado.append({
             "mes": item["mes_truncado"].strftime("%m/%Y"),
             "consumo": float(item["total"] or 0)
@@ -86,9 +88,10 @@ def crescimento_mensal(cliente_id=None):
 # 📈 CRESCIMENTO PERCENTUAL
 # ================================
 def crescimento_percentual(cliente_id=None):
+
     queryset = Consumo.objects.all()
 
-    if cliente_id:
+    if cliente_id and cliente_id != "geral":
         queryset = queryset.filter(cliente_id=cliente_id)
 
     consumos = queryset.order_by("-mes")
@@ -114,62 +117,57 @@ def crescimento_percentual(cliente_id=None):
 # ================================
 # 🚨 DETECTAR ANOMALIAS
 # ================================
-def detectar_anomalias(cliente_id: int):
+def detectar_anomalias(cliente_id):
 
     consumos = (
         Consumo.objects
         .filter(cliente_id=cliente_id)
         .order_by("mes")
-        .values_list("consumo_kwh", flat=True)
     )
 
-    consumos = list(consumos)
-
-    if len(consumos) < 3:
+    if consumos.count() < 3:
         return []
 
-    media = statistics.mean(consumos)
-    desvio = statistics.stdev(consumos)
+    valores = [float(c.consumo_kwh) for c in consumos]
+
+    media = statistics.mean(valores)
+    desvio = statistics.stdev(valores)
 
     limite_superior = media + (2 * desvio)
     limite_inferior = media - (2 * desvio)
 
-    dados = (
-        Consumo.objects
-        .filter(cliente_id=cliente_id)
-        .order_by("mes")
-    )
-
     anomalias = []
 
-    for item in dados:
+    for consumo in consumos:
 
-        if item.consumo_kwh > limite_superior:
+        valor = float(consumo.consumo_kwh)
+
+        if valor > limite_superior:
+
             anomalias.append({
-                "mes": item.mes,
-                "consumo": item.consumo_kwh,
+                "cliente": consumo.cliente.nome,
+                "mes": consumo.mes,
+                "consumo_kwh": valor,
                 "tipo": "alta"
             })
 
-        elif item.consumo_kwh < limite_inferior:
+        elif valor < limite_inferior:
+
             anomalias.append({
-                "mes": item.mes,
-                "consumo": item.consumo_kwh,
+                "cliente": consumo.cliente.nome,
+                "mes": consumo.mes,
+                "consumo_kwh": valor,
                 "tipo": "baixa"
             })
 
-    return {
-        "media": None,
-        "limite_superior": None,
-        "limite_inferior": None,
-        "anomalias": []
-    }
+    return anomalias
 
 
 # ================================
-# 📊 MÉDIA CONSUMO POR CLIENTE (DETALHADO)
+# 📊 MÉDIA CONSUMO POR CLIENTE
 # ================================
 def calcular_media_consumo(cliente_id):
+
     media = (
         Consumo.objects
         .filter(cliente_id=cliente_id)
@@ -193,10 +191,10 @@ def calcular_media_consumo(cliente_id):
         "ultimo_consumo": float(ultimo_consumo or 0),
     }
 
-#===========================
-# 🏆 TOP CONSUMIDORES
-#===========================
 
+# ================================
+# 🏆 TOP CONSUMIDORES
+# ================================
 def top_consumers(limit=3):
 
     ranking = (
@@ -208,8 +206,10 @@ def top_consumers(limit=3):
 
     return list(ranking)
 
-from django.db.models import Sum
 
+# ================================
+# 📊 CONSUMO TOTAL POR CLIENTE
+# ================================
 def consumo_total_por_cliente():
 
     dados = (
