@@ -115,57 +115,34 @@ def crescimento_percentual(cliente_id=None):
 # ================================
 def detectar_anomalias(cliente_id=None):
 
-    queryset = Consumo.objects.all()
+    consumos = Consumo.objects.all()
 
     if cliente_id and cliente_id != "geral":
-        queryset = queryset.filter(cliente_id=cliente_id)
+        consumos = consumos.filter(cliente_id=cliente_id)
 
-    clientes = queryset.values_list("cliente_id", flat=True).distinct()
+    if consumos.count() < 3:
+        return []
 
-    resultado = []
+    valores = [float(c.consumo_kwh) for c in consumos]
 
-    for cid in clientes:
+    media = statistics.mean(valores)
+    desvio = statistics.stdev(valores)
 
-        consumos = (
-            Consumo.objects
-            .filter(cliente_id=cid)
-            .order_by("mes")
-        )
+    limite_superior = media + (2 * desvio)
 
-        if consumos.count() < 3:
-            continue
+    anomalias = []
 
-        valores = [float(c.consumo_kwh) for c in consumos]
+    for consumo in consumos:
 
-        media = statistics.mean(valores)
-        desvio = statistics.stdev(valores)
+        if float(consumo.consumo_kwh) > limite_superior:
 
-        limite_superior = media + (2 * desvio)
-        limite_inferior = media - (2 * desvio)
+            anomalias.append({
+                "cliente": consumo.cliente.nome,
+                "mes": consumo.mes,
+                "consumo_kwh": float(consumo.consumo_kwh)
+            })
 
-        for consumo in consumos:
-
-            valor = float(consumo.consumo_kwh)
-
-            if valor > limite_superior:
-
-                resultado.append({
-                    "cliente": consumo.cliente.nome,
-                    "mes": consumo.mes,
-                    "consumo_kwh": valor,
-                    "tipo": "alta"
-                })
-
-            elif valor < limite_inferior:
-
-                resultado.append({
-                    "cliente": consumo.cliente.nome,
-                    "mes": consumo.mes,
-                    "consumo_kwh": valor,
-                    "tipo": "baixa"
-                })
-
-    return resultado
+    return anomalias
 
 
 # ================================
