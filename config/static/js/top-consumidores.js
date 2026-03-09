@@ -1,27 +1,52 @@
 async function carregarRanking(){
 
-    const response = await fetch("/api/v1/analytics/top-consumers/?limit=10");
-    const data = await response.json();
+    try{
 
-    const container = document.getElementById("ranking");
+        const response = await fetch("/api/v1/analytics/top-consumers/");
 
-    const medalhas = ["🥇","🥈","🥉"];
+        if(!response.ok){
+            throw new Error("Erro ao carregar ranking");
+        }
 
-    data.forEach((cliente,index)=>{
+        const data = await response.json();
 
-        const medalha = medalhas[index] || `#${index+1}`;
+        const container = document.getElementById("ranking");
 
-        const card = document.createElement("div");
-        card.className="card";
+        if(!container) return;
 
-        card.innerHTML = `
-        <div class="rank">${medalha} ${cliente.cliente__nome}</div>
-        <div class="consumo">${cliente.consumo_total} kWh</div>
-        `;
+        // limpa antes de adicionar
+        container.innerHTML = "";
 
-        container.appendChild(card);
+        const medalhas = ["🥇","🥈","🥉"];
 
-    });
+        if(data.length === 0){
+
+            container.innerHTML = "<p>Nenhum consumo registrado.</p>";
+            return;
+
+        }
+
+        data.forEach((cliente,index)=>{
+
+            const medalha = medalhas[index] || `#${index+1}`;
+
+            const card = document.createElement("div");
+            card.className="card";
+
+            card.innerHTML = `
+                <div class="rank">${medalha} ${cliente.cliente__nome}</div>
+                <div class="consumo">${Number(cliente.consumo_total).toFixed(2)} kWh</div>
+            `;
+
+            container.appendChild(card);
+
+        });
+
+    }catch(error){
+
+        console.error("Erro ao carregar ranking:", error);
+
+    }
 
 }
 
