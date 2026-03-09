@@ -113,37 +113,74 @@ def crescimento_percentual(cliente_id=None):
 # ================================
 # 🚨 DETECTAR ANOMALIAS
 # ================================
-def detectar_anomalias(cliente_id=None):
+def detectar_anomalias():
 
-    consumos = Consumo.objects.all()
-
-    if cliente_id and cliente_id != "geral":
-        consumos = consumos.filter(cliente_id=cliente_id)
-
-    if consumos.count() < 3:
-        return []
-
-    valores = [float(c.consumo_kwh) for c in consumos]
-
-    media = statistics.mean(valores)
-    desvio = statistics.stdev(valores)
-
-    limite_superior = media + (2 * desvio)
+    clientes = Cliente.objects.all()
 
     anomalias = []
 
-    for consumo in consumos:
+    for cliente in clientes:
 
-        if float(consumo.consumo_kwh) > limite_superior:
+        consumos = (
+            Consumo.objects
+            .filter(cliente=cliente)
+            .order_by("mes")
+        )
 
-            anomalias.append({
-                "cliente": consumo.cliente.nome,
-                "mes": consumo.mes,
-                "consumo_kwh": float(consumo.consumo_kwh)
-            })
+        if consumos.count() < 3:
+            continue
+
+        valores = [float(c.consumo_kwh) for c in consumos]
+
+        media = statistics.mean(valores)
+        desvio = statistics.stdev(valores)
+
+        limite_superior = media + (2 * desvio)
+        limite_inferior = media - (2 * desvio)
+
+        for i, consumo in enumerate(consumos):
+
+            valor = float(consumo.consumo_kwh)
+
+            # 🚨 pico de consumo
+            if valor > limite_superior:
+
+                anomalias.append({
+                    "cliente": cliente.nome,
+                    "mes": consumo.mes.strftime("%m/%Y"),
+                    "consumo_kwh": valor,
+                    "tipo": "Pico de consumo"
+                })
+
+            # 📉 queda brusca
+            elif valor < limite_inferior:
+
+                anomalias.append({
+                    "cliente": cliente.nome,
+                    "mes": consumo.mes.strftime("%m/%Y"),
+                    "consumo_kwh": valor,
+                    "tipo": "Queda brusca"
+                })
+
+            # ⚡ variação abrupta
+            if i > 0:
+
+                anterior = float(consumos[i-1].consumo_kwh)
+
+                if anterior > 0:
+
+                    variacao = abs(valor - anterior) / anterior
+
+                    if variacao > 0.8:  # 80% de variação
+
+                        anomalias.append({
+                            "cliente": cliente.nome,
+                            "mes": consumo.mes.strftime("%m/%Y"),
+                            "consumo_kwh": valor,
+                            "tipo": "Variação abrupta"
+                        })
 
     return anomalias
-
 
 # ================================
 # 📊 MÉDIA CONSUMO POR CLIENTE
