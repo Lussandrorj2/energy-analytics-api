@@ -34,7 +34,7 @@ urlpatterns = [
     path("logout/", logout_view, name="logout"),
     
     # Registration (Moved to apps/users)
-    path("", include("apps.users.urls")),
+    #path("", include("apps.users.urls")),
     
     # Protected Pages
     path("dashboard/", dashboard, name="dashboard"),
