@@ -172,12 +172,11 @@ class MediaConsumoView(APIView):
 #===========================
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
 def top_consumers_view(request):
 
-    limit = request.GET.get("limit", 3)
+    limit = int(request.GET.get("limit", 5))
 
-    data = top_consumers(int(limit))
+    data = top_consumers(limit)
 
     return Response(data)
 
