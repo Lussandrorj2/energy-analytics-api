@@ -57,5 +57,5 @@ urlpatterns = [
     ])),
     
     # Consumption App URLs
-    path('', include('apps.consumption.urls')),
+    path('consumo', include('apps.consumption.urls')),
 ]
