@@ -14,248 +14,266 @@
         body {
             background: #0f172a;
             color: white;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* HEADER */
+        /* HEADER & NAVIGATION */
         .header {
             background: #020617;
-            padding: 15px;
-            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .brand {
             font-size: 20px;
             font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        /* MENU */
-        .menu {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            display: flex;
+            align-items: center;
             gap: 8px;
-            padding: 10px;
-            background: #020617;
-            border-bottom: 1px solid #1e293b;
         }
 
-        .menu a {
+        /* Botão Hamburguer */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: white;
+            border-radius: 10px;
+            transition: all 0.3s linear;
+        }
+
+        /* MENU MOBILE (Escondido por padrão) */
+        .nav-menu {
+            display: none;
+            flex-direction: column;
+            background: #020617;
+            padding: 10px 20px 20px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .nav-menu.active {
+            display: flex;
+        }
+
+        .nav-menu a {
             text-decoration: none;
             color: white;
-            background: #3b82f6;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            text-align: center;
+            background: #1e293b;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 8px;
             transition: 0.2s;
         }
 
-        .menu a:hover {
-            background: #2563eb;
+        .nav-menu a:hover {
+            background: #334155;
+        }
+
+        .btn-logout {
+            background: #7f1d1d !important; /* Vermelho escuro para logout */
         }
 
         /* CONTAINER */
         .container {
-            width: 95%;
-            margin: 20px auto;
+            width: 92%;
+            max-width: 1200px;
+            margin: 15px auto;
             flex: 1;
         }
 
-        /* HERO */
+        /* HERO & CARDS */
         .hero-home {
             position: relative;
             width: 100%;
-            margin: 20px auto;
             background-image: url("{% static 'images/energy-hero.webp' %}");
             background-size: cover;
             background-position: center;
-            min-height: 320px;
-            padding: 30px 15px;
-            border-radius: 12px;
+            min-height: 300px;
+            padding: 20px;
+            border-radius: 16px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
         }
 
         .hero-home::before {
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.7);
         }
 
         .hero-overlay {
             position: relative;
-            max-width: 900px;
-            margin: auto;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(6px);
+            z-index: 1;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
             padding: 25px;
             border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* CARDS */
         .card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(6px);
+            background: #1e293b;
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid #1e293b;
+            border: 1px solid #334155;
         }
 
-        /* FORM */
+        /* FORM & BUTTONS */
         input {
             width: 100%;
             padding: 12px;
             margin: 8px 0;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #334155;
-            background: #1e293b;
+            background: #0f172a;
             color: white;
+            box-sizing: border-box;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        button {
+        button.btn-primary {
             width: 100%;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 14px;
+            border-radius: 8px;
             border: none;
-            background: #38bdf8;
+            background: #3b82f6;
+            color: white;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
+            font-size: 16px;
         }
 
-        button:hover {
-            background: #0ea5e9;
-        }
-
-        /* GRÁFICOS */
-        canvas {
-            width: 100% !important;
-            min-height: 250px;
-        }
-
-        /* PAGES */
-        .page-top-consumo,
-        .page-anomalias {
-            min-height: 100vh;
-            padding: 20px 0;
-        }
-
-        /* TITULOS */
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        h2 {
-            font-size: 18px;
-        }
-
-        /* ERROR MESSAGES */
-        .error-messages {
-            background: rgba(220, 38, 38, 0.2);
-            border: 1px solid #dc2626;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-        }
-
-        .error-messages ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .error-messages li {
-            color: #fca5a5;
-            margin-bottom: 5px;
-        }
-
-        /* ===== DESKTOP ===== */
+        /* ===== DESKTOP RESPONSIVIDADE ===== */
         @media(min-width: 768px) {
-            .header {
-                font-size: 22px;
-                padding: 18px;
+            .menu-toggle {
+                display: none; /* Esconde botão hamburguer */
             }
 
-            .menu {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-                padding: 15px;
+            .header-container {
+                padding: 15px 40px;
             }
 
-            .menu a {
-                padding: 12px 18px;
-                font-size: 15px;
+            .nav-menu {
+                display: flex !important; /* Sempre mostra no desktop */
+                flex-direction: row;
+                background: transparent;
+                border: none;
+                padding: 0;
+                gap: 12px;
             }
 
-            .container {
-                max-width: 1200px;
-                margin: 40px auto;
+            .nav-menu a {
+                margin-bottom: 0;
+                background: transparent;
+                padding: 8px 12px;
+                font-size: 14px;
+                border: 1px solid transparent;
             }
 
+            .nav-menu a:hover {
+                background: #1e293b;
+                border-color: #3b82f6;
+            }
+
+            .nav-menu a.active-link {
+                background: #3b82f6;
+            }
+            
             .hero-home {
-                min-height: 500px;
-                padding: 60px 20px;
-            }
-
-            .hero-overlay {
-                padding: 40px;
-            }
-
-            canvas {
-                min-height: 350px;
-            }
-
-            h1 {
-                font-size: 32px;
-            }
-
-            h2 {
-                font-size: 24px;
+                min-height: 450px;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        ⚡ Energy Analytics
-    </div>
+    <header class="header">
+        <div class="header-container">
+            <div class="brand">
+                ⚡ Energy Analytics
+            </div>
+            
+            <button class="menu-toggle" id="mobile-menu" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
-  <div class="menu">
+            <nav class="nav-menu" id="nav-list">
+                <a href="{% url 'home' %}">Home</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}">Dashboard</a>
+                    <a href="{% url 'clientes' %}">Clientes</a>
+                    <a href="{% url 'consumo' %}">Consumo</a>
+                    <a href="{% url 'top_consumidores_page' %}">Top Consumo</a>
+                    <a href="{% url 'anomalias_page' %}">Anomalias</a>
+                    <a href="{% url 'logout' %}" class="btn-logout">Sair</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
 
-    <a href="{% url 'home' %}">Home</a>
-
-    {% if user.is_authenticated %}
-
-        <a href="{% url 'dashboard' %}">Dashboard</a>
-        <a href="{% url 'clientes' %}">Clientes</a>
-        <a href="{% url 'consumo' %}">Consumo</a>
-        <a href="{% url 'top_consumidores_page' %}">Top Consumo</a>
-        <a href="{% url 'anomalias_page' %}">Anomalias</a>
-        <a href="{% url 'logout' %}">Logout</a>
-
-    {% else %}
-
-        <a href="{% url 'login' %}">Login</a>
-
-    {% endif %}
-
-</div>
-
-    <div class="container">
+    <main class="container">
         {% block content %}
         {% endblock %}
-    </div>
-</body>
+    </main>
 
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('nav-list');
+            const toggle = document.getElementById('mobile-menu');
+            
+            // Abre/Fecha o menu
+            nav.classList.toggle('active');
+            
+            // Animação opcional no ícone hamburguer (X)
+            const spans = toggle.getElementsByTagName('span');
+            if (nav.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -7px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
+
+        // Fecha o menu ao clicar em um link (útil para SPAs ou âncoras)
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav-list').classList.remove('active');
+            });
+        });
+    </script>
+</body>
 </html>
