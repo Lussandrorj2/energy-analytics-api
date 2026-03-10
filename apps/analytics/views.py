@@ -140,7 +140,7 @@ def anomalias_consumo_view(request):
 
     anomalias = (
         Consumo.objects
-        .filter(consumo_kwh__gt=media * 2)
+        .filter(consumo_kwh__gt=media * 1.5)
         .values("cliente__nome", "consumo_kwh", "mes")
     )
 
