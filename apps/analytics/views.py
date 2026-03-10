@@ -149,7 +149,8 @@ def anomalias_consumo_view(request):
     for item in anomalias:
         resultado.append({
             "cliente_nome": item["cliente__nome"],
-            "mes_formato": item["mes"].strftime("%Y-%m-%d") if item["mes"]else None,
+            # Adicionado o 'ado' no final para bater com o JS
+            "mes_formatado": item["mes"].strftime("%Y-%m-%d") if item["mes"] else None,
             "consumo_kwh": float(item["consumo_kwh"]),
             "tipo": "Consumo anormal"
         })
