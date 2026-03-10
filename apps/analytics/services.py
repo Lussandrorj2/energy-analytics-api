@@ -219,7 +219,7 @@ def top_consumers(limit=5):
 
     ranking = (
         Consumo.objects
-        .values(nome=F("cliente__nome"))
+        .values(cliente_nome=F("cliente_nome"))
         .annotate(consumo=Sum("consumo_kwh"))
         .order_by("-consumo")[:limit]
     )

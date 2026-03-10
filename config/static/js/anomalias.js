@@ -20,7 +20,9 @@ fetch("/api/v1/analytics/anomalias/")
 
             row.innerHTML = `
 <span>${item.cliente}</span>
-<span>${item.consumo} kWh</span>
+<span>${item.mes}</span>
+<span>${item.consumo_kwh} kWh</span>
+<span>${item.tipo}</span>
 `;
 
             container.appendChild(row);

@@ -40,7 +40,6 @@ urlpatterns = [
     path("dashboard/", dashboard, name="dashboard"),
     path("clientes-view/", clientes_view, name="clientes"),
     path("analytics/", analytics_page, name="analytics"),
-    path("consumo/", include("apps.consumption.urls")),
     path("top-consumidores/", top_consumidores_page, name="top_consumidores_page"),
     path("anomalias/", anomalias_page, name="anomalias_page"),
     

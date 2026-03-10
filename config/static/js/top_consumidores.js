@@ -14,8 +14,8 @@ fetch("/api/v1/analytics/top-consumers/")
             item.style.borderBottom = "1px solid rgba(255,255,255,0.1)";
 
             item.innerHTML = `
-<span>${index + 1}º ${cliente.cliente__nome}</span>
-<span>${cliente.consumo_total} kWh</span>
+<span>${index + 1}º ${cliente.nome}</span>
+<span>${cliente.consumo} kWh</span>
 `;
 
             container.appendChild(item);
