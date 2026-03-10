@@ -21,4 +21,5 @@ else:
 EOF
 
 echo "Starting server..."
+
 exec "$@"
