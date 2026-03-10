@@ -26,7 +26,7 @@ fetch("/api/v1/analytics/anomalias/")
     <span>${item.mes_formatado ? new Date(item.mes_formatado + "T00:00:00").toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : 'Sem data'}</span>
     <span>${item.consumo_kwh} kWh</span>
     <span style="color: #ff4d4d;">${item.tipo || 'Consumo anormal'}</span>
-`;
+`;  
 
             container.appendChild(row);
         });
