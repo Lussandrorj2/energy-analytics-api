@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 echo "Applying migrations..."
 python manage.py migrate --noinput
@@ -7,7 +8,7 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "Creating superuser if not exists..."
-python manage.py shell << END
+python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
