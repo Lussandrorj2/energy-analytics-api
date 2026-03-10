@@ -7,6 +7,10 @@ class ClienteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ConsumoSerializer(serializers.ModelSerializer):
+    # Cria campos amigáveis para o Frontend
+    cliente_nome = serializers.ReadOnlyField(source='cliente.nome')
+    mes_formatado = serializers.DateField(source='mes', format="%Y-%m-%d")
+
     class Meta:
         model = Consumo
-        fields = '__all__'
+        fields = ['id', 'cliente', 'cliente_nome', 'mes_formatado', 'consumo_kwh'] # Adicione 'tipo' se existir no model
