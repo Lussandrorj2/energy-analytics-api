@@ -1,67 +1,68 @@
 {% extends "base.html" %}
 
-{% block title %}
-Analytics
-{% endblock %}
+{% block title %} Analytics {% endblock %}
 
 {% block content %}
-
 <h1>📈 Média de Consumo</h1>
 
 <div class="card">
+    <select id="clienteId">
+        <option value="geral">Todos clientes</option>
+        {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+        {% endfor %}
+    </select>
 
-    <input type="number" id="clienteId" placeholder="Digite o ID do Cliente">
-
-    <button onclick="buscarMedia()">
-        Buscar
-    </button>
+    <button onclick="buscarMedia()">Buscar</button>
 
     <h2 id="media"></h2>
     <h3 id="ultimo"></h3>
 
     <canvas id="grafico"></canvas>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-
     let chart;
 
     function buscarMedia() {
-
         const id = document.getElementById("clienteId").value;
 
         fetch(`/api/v1/analytics/media-consumo/?cliente_id=${id}`)
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error("Erro na requisição");
+                return res.json();
+            })
             .then(data => {
+                // Preenche os textos
+                document.getElementById("media").innerText = `Média: ${data.media || 0} kWh`;
+                document.getElementById("ultimo").innerText = `Último Consumo: ${data.ultimo_consumo || 0} kWh`;
 
-                document.getElementById("media").innerText =
-                    "Média: " + data.media + " kWh";
-
-                document.getElementById("ultimo").innerText =
-                    "Último Consumo: " + data.ultimo_consumo + " kWh";
-
+                // Destrói o gráfico anterior se existir
                 if (chart) chart.destroy();
 
-                const ctx = document.getElementById("grafico");
-
+                const ctx = document.getElementById("grafico").getContext("2d");
                 chart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: ["Média", "Último"],
                         datasets: [{
                             label: "Consumo (kWh)",
-                            data: [data.media, data.ultimo_consumo]
+                            data: [data.media, data.ultimo_consumo],
+                            backgroundColor: ['#3498db', '#e74c3c'] // Cores para diferenciar
                         }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { beginAtZero: true } }
                     }
-                })
-
+                });
             })
-
+            .catch(err => {
+                console.error(err);
+                alert("Não foi possível carregar os dados deste cliente.");
+            });
     }
-
 </script>
-
 {% endblock %}
