@@ -141,15 +141,15 @@ def anomalias_consumo_view(request):
     anomalias = (
         Consumo.objects
         .filter(consumo_kwh__gt=media * 2)
-        .values("cliente__nome", "consumo_kwh")
+        .values("cliente__nome", "consumo_kwh", "mes")
     )
 
     resultado = []
 
     for item in anomalias:
-
         resultado.append({
-            "cliente": item["cliente__nome"],
+            "cliente_nome": item["cliente__nome"],
+            "mes_formato": item["mes"].strftime("%Y-%m-%d") if item["mes"]else None,
             "consumo_kwh": float(item["consumo_kwh"]),
             "tipo": "Consumo anormal"
         })
