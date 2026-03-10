@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 echo "Applying migrations..."
 python manage.py migrate --noinput
 
@@ -8,6 +7,7 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "Creating superuser if not exists..."
+
 python manage.py shell <<EOF
 from django.contrib.auth import get_user_model
 
@@ -18,7 +18,7 @@ if not User.objects.filter(username="admin").exists():
     print("Superuser created")
 else:
     print("Superuser already exists")
-END
+EOF
 
 echo "Starting server..."
 exec "$@"
