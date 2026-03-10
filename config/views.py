@@ -29,7 +29,7 @@ def consumo(request):
 
 @login_required
 def top_consumidores_page(request):
-    return render(request, "top-consumidores.html")
+    return render(request, "top_consumidores.html")
 
 @login_required
 def anomalias_page(request):

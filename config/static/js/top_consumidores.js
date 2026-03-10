@@ -1,6 +1,6 @@
 const container = document.getElementById("ranking");
 
-fetch("/api/v1/analytics/top-consumidores/")
+fetch("/api/v1/analytics/top-consumers/")
     .then(res => res.json())
     .then(data => {
 

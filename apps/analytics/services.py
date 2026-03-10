@@ -1,4 +1,4 @@
-from django.db.models import Avg, Sum
+from django.db.models import Avg, Sum, F
 from django.db.models.functions import TruncMonth
 from apps.consumption.models import Consumo
 from apps.users.models import Cliente
@@ -214,13 +214,14 @@ def calcular_media_consumo(cliente_id):
 # ================================
 # 🏆 TOP CONSUMIDORES
 # ================================
+
 def top_consumers(limit=5):
 
     ranking = (
         Consumo.objects
-        .values("cliente__nome")
-        .annotate(consumo_total=Sum("consumo_kwh"))
-        .order_by("-consumo_total")[:limit]
+        .values(nome=F("cliente__nome"))
+        .annotate(consumo=Sum("consumo_kwh"))
+        .order_by("-consumo")[:limit]
     )
 
     return list(ranking)
