@@ -1,16 +1,13 @@
-python manage.py shell <<EOF
-import os
-from django.contrib.auth import get_user_model
+#!/bin/sh
 
-User = get_user_model()
+echo "Applying migrations..."
+python manage.py migrate --noinput
 
-username = os.getenv("DJANGO_SUPERUSER_USERNAME", "admin")
-email = os.getenv("DJANGO_SUPERUSER_EMAIL", "admin@email.com")
-password = os.getenv("DJANGO_SUPERUSER_PASSWORD", "admin123")
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
-if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(username, email, password)
-    print("Superuser created")
-else:
-    print("Superuser already exists")
-EOF
+echo "Creating superuser..."
+python create_superuser.py
+
+echo "Starting server..."
+exec "$@"
